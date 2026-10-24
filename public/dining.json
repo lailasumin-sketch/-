@@ -1,0 +1,1224 @@
+{
+  "meta": {
+    "sourceWorkbook": "data/mock/mock-restaurants-cafes.xlsx",
+    "sourceCsv": "data/mock/mock-restaurants-cafes.csv",
+    "disclaimer": "전부 창작한 가상 테스트 업소입니다. 메뉴·가격·운영시간·권역·정책 모두 가정이며 실제 방문·예약·지도 검색에 사용할 수 없습니다."
+  },
+  "places": [
+    {
+      "id": "MOCK-001",
+      "name": "[가상] 마늘달빛 밥상",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "central",
+      "area": "의성읍",
+      "cuisine": "한식",
+      "menu": "마늘솥밥·된장국",
+      "price": 14000,
+      "audiences": [
+        "연인",
+        "가족"
+      ],
+      "atmosphere": "차분한 식사",
+      "minutes": 70,
+      "openTime": "11:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "마늘 요리"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-002",
+      "name": "[가상] 돌담한상",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "south",
+      "area": "금성면",
+      "cuisine": "한식",
+      "menu": "들깨버섯정식",
+      "price": 13000,
+      "audiences": [
+        "가족",
+        "혼자"
+      ],
+      "atmosphere": "편안한 한 끼",
+      "minutes": 60,
+      "openTime": "11:00",
+      "closeTime": "19:30",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "담백한 식사"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-003",
+      "name": "[가상] 별빛마늘구이",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "central",
+      "area": "봉양면",
+      "cuisine": "고깃집",
+      "menu": "마늘구이 고기모둠",
+      "price": 32000,
+      "audiences": [
+        "친구",
+        "가족"
+      ],
+      "atmosphere": "활기찬 저녁",
+      "minutes": 100,
+      "openTime": "16:00",
+      "closeTime": "22:00",
+      "closedWeekdays": [
+        3
+      ],
+      "closedLabel": "수",
+      "reservation": "권장",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "높음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "고기",
+        "저녁"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-004",
+      "name": "[가상] 초록들 국수집",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "west",
+      "area": "안계면",
+      "cuisine": "면요리",
+      "menu": "들깨국수·비빔국수",
+      "price": 9000,
+      "audiences": [
+        "혼자",
+        "친구"
+      ],
+      "atmosphere": "간단한 점심",
+      "minutes": 45,
+      "openTime": "10:30",
+      "closeTime": "18:30",
+      "closedWeekdays": [
+        4
+      ],
+      "closedLabel": "목",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "가벼운 식사"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-005",
+      "name": "[가상] 산운가든 키친",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "south",
+      "area": "금성면",
+      "cuisine": "양식",
+      "menu": "허브치킨·토마토파스타",
+      "price": 22000,
+      "audiences": [
+        "연인",
+        "친구"
+      ],
+      "atmosphere": "데이트 식사",
+      "minutes": 90,
+      "openTime": "11:30",
+      "closeTime": "21:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "권장",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "데이트"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-006",
+      "name": "[가상] 작은들 비빔밥",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "west",
+      "area": "다인면",
+      "cuisine": "한식",
+      "menu": "계절나물비빔밥",
+      "price": 11000,
+      "audiences": [
+        "혼자",
+        "가족"
+      ],
+      "atmosphere": "소박한 점심",
+      "minutes": 50,
+      "openTime": "11:00",
+      "closeTime": "18:00",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "나물",
+        "점심"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-007",
+      "name": "[가상] 사촌골 만두방",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "east",
+      "area": "점곡면",
+      "cuisine": "분식",
+      "menu": "손만두전골·찐만두",
+      "price": 12000,
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "atmosphere": "따뜻한 식사",
+      "minutes": 60,
+      "openTime": "11:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        3
+      ],
+      "closedLabel": "수",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "만두"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-008",
+      "name": "[가상] 고요한 숲 한정식",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "east",
+      "area": "단촌면",
+      "cuisine": "한정식",
+      "menu": "숲나물한상",
+      "price": 28000,
+      "audiences": [
+        "연인",
+        "가족"
+      ],
+      "atmosphere": "조용한 기념일",
+      "minutes": 100,
+      "openTime": "11:30",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "필수",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "기념일"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-009",
+      "name": "[가상] 금빛들 도시락",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "central",
+      "area": "의성읍",
+      "cuisine": "도시락",
+      "menu": "마늘불고기도시락",
+      "price": 10000,
+      "audiences": [
+        "혼자",
+        "친구"
+      ],
+      "atmosphere": "포장 중심",
+      "minutes": 30,
+      "openTime": "10:00",
+      "closeTime": "17:00",
+      "closedWeekdays": [
+        0
+      ],
+      "closedLabel": "일",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": [
+        "포장 전용"
+      ],
+      "tags": [
+        "포장"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-010",
+      "name": "[가상] 강바람 생선구이",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "west",
+      "area": "단밀면",
+      "cuisine": "한식",
+      "menu": "생선구이정식",
+      "price": 16000,
+      "audiences": [
+        "가족",
+        "혼자"
+      ],
+      "atmosphere": "든든한 한 끼",
+      "minutes": 60,
+      "openTime": "11:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        4
+      ],
+      "closedLabel": "목",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "생선"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-011",
+      "name": "[가상] 들꽃채소 식탁",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "east",
+      "area": "옥산면",
+      "cuisine": "채소요리",
+      "menu": "구운채소덮밥·채소수프",
+      "price": 15000,
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "atmosphere": "가벼운 채소 식사",
+      "minutes": 70,
+      "openTime": "11:00",
+      "closeTime": "19:00",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "권장",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "채소 중심"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-012",
+      "name": "[가상] 빙계온기 국밥",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "south",
+      "area": "춘산면",
+      "cuisine": "국밥",
+      "menu": "맑은소고기국밥",
+      "price": 11000,
+      "audiences": [
+        "혼자",
+        "가족"
+      ],
+      "atmosphere": "빠르고 든든하게",
+      "minutes": 40,
+      "openTime": "08:00",
+      "closeTime": "19:00",
+      "closedWeekdays": [
+        3
+      ],
+      "closedLabel": "수",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "아침 식사"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-013",
+      "name": "[가상] 두런두런 화덕집",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "central",
+      "area": "안평면",
+      "cuisine": "양식",
+      "menu": "마늘화덕피자",
+      "price": 19000,
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "atmosphere": "함께 나누는 식사",
+      "minutes": 90,
+      "openTime": "11:30",
+      "closeTime": "21:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "권장",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "높음",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "피자"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-014",
+      "name": "[가상] 마늘향 작은초밥",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "central",
+      "area": "의성읍",
+      "cuisine": "일식",
+      "menu": "구운마늘초밥세트",
+      "price": 23000,
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "atmosphere": "차분한 바 좌석",
+      "minutes": 70,
+      "openTime": "11:30",
+      "closeTime": "21:00",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "권장",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": [
+        "14:30",
+        "17:00"
+      ],
+      "tags": [
+        "초밥"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-015",
+      "name": "[가상] 초승달 닭요리",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "west",
+      "area": "비안면",
+      "cuisine": "닭요리",
+      "menu": "간장마늘닭구이",
+      "price": 21000,
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "atmosphere": "함께 먹는 저녁",
+      "minutes": 90,
+      "openTime": "12:00",
+      "closeTime": "21:00",
+      "closedWeekdays": [
+        4
+      ],
+      "closedLabel": "목",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": [
+        "15:00",
+        "17:00"
+      ],
+      "tags": [
+        "닭요리"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-016",
+      "name": "[가상] 안계한그릇",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "west",
+      "area": "안계면",
+      "cuisine": "덮밥",
+      "menu": "버섯소고기덮밥",
+      "price": 12000,
+      "audiences": [
+        "혼자",
+        "연인"
+      ],
+      "atmosphere": "깔끔한 한 그릇",
+      "minutes": 45,
+      "openTime": "11:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        0
+      ],
+      "closedLabel": "일",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "혼밥"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-017",
+      "name": "[가상] 온유한 들밥",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "west",
+      "area": "단북면",
+      "cuisine": "한식",
+      "menu": "두부버섯전골",
+      "price": 17000,
+      "audiences": [
+        "가족",
+        "연인"
+      ],
+      "atmosphere": "여유로운 식사",
+      "minutes": 80,
+      "openTime": "11:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "전골"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-018",
+      "name": "[가상] 노을고기 마당",
+      "category": "맛집",
+      "categories": [
+        "맛집"
+      ],
+      "region": "west",
+      "area": "다인면",
+      "cuisine": "고깃집",
+      "menu": "마늘양념구이",
+      "price": 29000,
+      "audiences": [
+        "친구",
+        "가족"
+      ],
+      "atmosphere": "야외 저녁 모임",
+      "minutes": 110,
+      "openTime": "16:00",
+      "closeTime": "22:00",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "필수",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "높음",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "저녁 모임"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-019",
+      "name": "[가상] 초록우편 커피",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "central",
+      "area": "의성읍",
+      "cuisine": "커피",
+      "menu": "아메리카노·마늘크림스콘",
+      "price": 9000,
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "atmosphere": "조용한 휴식",
+      "minutes": 70,
+      "openTime": "10:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "커피",
+        "독서"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-020",
+      "name": "[가상] 사과빛 베이크룸",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "east",
+      "area": "옥산면",
+      "cuisine": "베이커리",
+      "menu": "사과타르트·라테",
+      "price": 12000,
+      "audiences": [
+        "연인",
+        "가족"
+      ],
+      "atmosphere": "디저트와 대화",
+      "minutes": 80,
+      "openTime": "10:00",
+      "closeTime": "19:00",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "가능",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "베이커리"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-021",
+      "name": "[가상] 구름산책 티하우스",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "south",
+      "area": "금성면",
+      "cuisine": "차",
+      "menu": "허브차·쌀케이크",
+      "price": 11000,
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "atmosphere": "차분한 티타임",
+      "minutes": 90,
+      "openTime": "11:00",
+      "closeTime": "19:00",
+      "closedWeekdays": [
+        3
+      ],
+      "closedLabel": "수",
+      "reservation": "권장",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "차",
+        "휴식"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-022",
+      "name": "[가상] 강변느린커피",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "west",
+      "area": "단밀면",
+      "cuisine": "커피",
+      "menu": "콜드브루·치즈케이크",
+      "price": 10000,
+      "audiences": [
+        "연인",
+        "친구"
+      ],
+      "atmosphere": "풍경과 대화",
+      "minutes": 80,
+      "openTime": "10:00",
+      "closeTime": "21:00",
+      "closedWeekdays": [
+        4
+      ],
+      "closedLabel": "목",
+      "reservation": "불가",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "사진",
+        "커피"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-023",
+      "name": "[가상] 콩닥콩닥 디저트",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "west",
+      "area": "안계면",
+      "cuisine": "디저트",
+      "menu": "과일와플·우유라테",
+      "price": 13000,
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "atmosphere": "밝고 활기찬 공간",
+      "minutes": 70,
+      "openTime": "11:00",
+      "closeTime": "21:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "가능",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "높음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "와플"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-024",
+      "name": "[가상] 사촌책방 카페",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "east",
+      "area": "점곡면",
+      "cuisine": "북카페",
+      "menu": "핸드드립·파운드케이크",
+      "price": 10000,
+      "audiences": [
+        "혼자",
+        "연인"
+      ],
+      "atmosphere": "독서와 휴식",
+      "minutes": 100,
+      "openTime": "10:30",
+      "closeTime": "18:30",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "독서"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-025",
+      "name": "[가상] 작은정원 로스터스",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "central",
+      "area": "봉양면",
+      "cuisine": "커피",
+      "menu": "핸드드립·버터쿠키",
+      "price": 9000,
+      "audiences": [
+        "혼자",
+        "친구"
+      ],
+      "atmosphere": "커피 중심",
+      "minutes": 60,
+      "openTime": "09:00",
+      "closeTime": "19:00",
+      "closedWeekdays": [
+        3
+      ],
+      "closedLabel": "수",
+      "reservation": "불가",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "커피"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-026",
+      "name": "[가상] 노을담은 찻집",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "west",
+      "area": "다인면",
+      "cuisine": "전통차",
+      "menu": "대추차·인절미",
+      "price": 11000,
+      "audiences": [
+        "가족",
+        "연인"
+      ],
+      "atmosphere": "느긋한 대화",
+      "minutes": 90,
+      "openTime": "11:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        4
+      ],
+      "closedLabel": "목",
+      "reservation": "권장",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "전통차"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-027",
+      "name": "[가상] 달보드레 쌀빵집",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "central",
+      "area": "의성읍",
+      "cuisine": "베이커리",
+      "menu": "쌀소금빵·카페라테",
+      "price": 9000,
+      "audiences": [
+        "가족",
+        "혼자"
+      ],
+      "atmosphere": "가벼운 포장",
+      "minutes": 45,
+      "openTime": "08:30",
+      "closeTime": "18:00",
+      "closedWeekdays": [
+        1
+      ],
+      "closedLabel": "월",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": false,
+      "noise": "보통",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "아침",
+        "포장"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-028",
+      "name": "[가상] 숲멍 한잔",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "east",
+      "area": "단촌면",
+      "cuisine": "커피",
+      "menu": "드립커피·당근케이크",
+      "price": 11000,
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "atmosphere": "조용한 쉼",
+      "minutes": 100,
+      "openTime": "10:00",
+      "closeTime": "18:00",
+      "closedWeekdays": [
+        2
+      ],
+      "closedLabel": "화",
+      "reservation": "가능",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "낮음",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "휴식"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-029",
+      "name": "[가상] 빙계여름 빙수방",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "south",
+      "area": "춘산면",
+      "cuisine": "빙수",
+      "menu": "우유빙수·과일에이드",
+      "price": 14000,
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "atmosphere": "시원한 간식",
+      "minutes": 60,
+      "openTime": "11:00",
+      "closeTime": "20:00",
+      "closedWeekdays": [
+        3
+      ],
+      "closedLabel": "수",
+      "reservation": "불가",
+      "petPolicy": "불가",
+      "parking": true,
+      "noise": "높음",
+      "space": "실내",
+      "breakTime": null,
+      "tags": [
+        "빙수"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    },
+    {
+      "id": "MOCK-030",
+      "name": "[가상] 별자리 밤카페",
+      "category": "카페",
+      "categories": [
+        "카페"
+      ],
+      "region": "west",
+      "area": "비안면",
+      "cuisine": "커피",
+      "menu": "디카페인라테·초코케이크",
+      "price": 12000,
+      "audiences": [
+        "연인",
+        "친구"
+      ],
+      "atmosphere": "늦은 저녁 대화",
+      "minutes": 90,
+      "openTime": "13:00",
+      "closeTime": "22:30",
+      "closedWeekdays": [
+        4
+      ],
+      "closedLabel": "목",
+      "reservation": "권장",
+      "petPolicy": "테라스만",
+      "parking": true,
+      "noise": "보통",
+      "space": "실내·테라스",
+      "breakTime": null,
+      "tags": [
+        "야간",
+        "디카페인"
+      ],
+      "isMock": true,
+      "verification": "fictional",
+      "address": null,
+      "phone": null,
+      "bookingUrl": null,
+      "sourceUrl": null
+    }
+  ]
+}
