@@ -1,0 +1,1175 @@
+{
+  "meta": {
+    "title": "의성 여행 조사 후보 목록",
+    "version": 2,
+    "status": "research-pending",
+    "sourceAccessAttemptedAt": "2026-10-24",
+    "sourceAccessResult": "클라우드 네트워크 정책에서 공식 원문 HTTPS 조회가 403으로 차단됨. 자료 확인일이 아님.",
+    "description": "일반적으로 알려진 명칭을 바탕으로 만든 조사 후보. 공식 자료에서 선별·검증한 관광 DB가 아님. 위치·운영·요금·예약은 미확인. 권역·동행 적합도·소요시간은 편집상 가정.",
+    "regions": {
+      "central": "의성·봉양·안평권",
+      "south": "금성·가음·춘산권",
+      "east": "단촌·점곡·옥산권",
+      "west": "안계·비안·다인권"
+    }
+  },
+  "places": [
+    {
+      "id": "sanun",
+      "name": "산운마을",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "minutes": 90,
+      "indoor": false,
+      "group": "산운",
+      "description": "전통 마을 풍경과 골목 산책을 고려할 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "sanun-eco",
+      "name": "산운생태공원",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "가족",
+        "연인"
+      ],
+      "minutes": 60,
+      "indoor": false,
+      "group": "산운",
+      "description": "마을 주변에서 가볍게 걷는 일정의 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "jomon-ruins",
+      "name": "조문국 사적지",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "친구"
+      ],
+      "minutes": 70,
+      "indoor": false,
+      "group": "조문국",
+      "description": "유적과 야외 풍경을 함께 살펴볼 후보입니다. 꽃 풍경은 개화 확인이 필요합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "jomon-museum",
+      "name": "의성조문국박물관",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "가족",
+        "혼자"
+      ],
+      "minutes": 90,
+      "indoor": true,
+      "group": "조문국",
+      "description": "지역 역사 전시를 살펴보는 실내 관람 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "tapri-pagoda",
+      "name": "의성 탑리리 오층석탑",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "가족"
+      ],
+      "minutes": 40,
+      "indoor": false,
+      "group": "탑리",
+      "description": "문화유산을 중심으로 짧게 둘러볼 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "dinosaur",
+      "name": "의성 제오리 공룡발자국 화석산지",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "minutes": 40,
+      "indoor": false,
+      "group": "제오리",
+      "description": "지질과 공룡에 관심 있는 여행의 후보입니다. 관람 구역 접근을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "geumseong-mountain",
+      "name": "금성산",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "친구",
+        "혼자"
+      ],
+      "minutes": 180,
+      "indoor": false,
+      "group": "금성산",
+      "description": "등산 중심 여행의 후보입니다. 탐방로 통제와 난이도 확인이 필요합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "bibong-mountain",
+      "name": "비봉산",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "친구"
+      ],
+      "minutes": 180,
+      "indoor": false,
+      "group": "비봉산",
+      "description": "활동적인 산행 후보입니다. 등산 장비와 탐방로 상황을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "binggye",
+      "name": "빙계계곡",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "친구"
+      ],
+      "minutes": 90,
+      "indoor": false,
+      "group": "빙계",
+      "description": "계곡 주변 풍경을 즐기는 후보입니다. 물놀이나 접근 가능 여부를 보장하지 않습니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "binggye-seowon",
+      "name": "빙계서원",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "가족"
+      ],
+      "minutes": 45,
+      "indoor": false,
+      "group": "빙계",
+      "description": "계곡 인근 문화유산을 둘러보는 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "sujeongsa",
+      "name": "수정사",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "연인"
+      ],
+      "minutes": 60,
+      "indoor": false,
+      "group": "수정사",
+      "description": "조용한 사찰 방문 후보입니다. 종교시설 예절과 개방 구역을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "gounsa",
+      "name": "고운사",
+      "region": "east",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "연인"
+      ],
+      "minutes": 90,
+      "indoor": false,
+      "group": "고운사",
+      "description": "산불 피해 이후 복구와 방문 가능 구역을 공식 안내에서 먼저 확인해야 하는 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": true,
+      "holdReason": "산불 영향과 현재 운영 여부 우선 확인",
+      "requiresPet": false
+    },
+    {
+      "id": "choe-literature",
+      "name": "최치원문학관",
+      "region": "east",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "가족"
+      ],
+      "minutes": 60,
+      "indoor": true,
+      "group": "고운사",
+      "description": "전시 운영과 방문 가능 여부의 우선 확인이 필요한 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": true,
+      "holdReason": "산불 영향과 현재 운영 여부 우선 확인",
+      "requiresPet": false
+    },
+    {
+      "id": "sachon",
+      "name": "사촌마을",
+      "region": "east",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "가족"
+      ],
+      "minutes": 90,
+      "indoor": false,
+      "group": "사촌",
+      "description": "전통 마을과 골목 풍경을 살펴볼 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "sachon-forest",
+      "name": "사촌가로숲",
+      "region": "east",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "minutes": 50,
+      "indoor": false,
+      "group": "사촌",
+      "description": "숲길 산책 후보입니다. 마을과 가까운 시설은 코스에서 중복을 줄입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "sowoodang",
+      "name": "의성 소우당",
+      "region": "south",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "minutes": 40,
+      "indoor": false,
+      "group": "산운",
+      "description": "고택 문화유산 후보입니다. 사유 공간의 관람 및 출입 가능 여부를 확인해야 합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "geumbong",
+      "name": "금봉자연휴양림",
+      "region": "east",
+      "categories": [
+        "숙박",
+        "볼거리"
+      ],
+      "audiences": [
+        "가족",
+        "연인"
+      ],
+      "minutes": 90,
+      "indoor": false,
+      "group": "금봉",
+      "description": "숲에서 쉬거나 숙박을 알아볼 후보입니다. 산불 영향·시설 운영·예약 상태는 별도 확인이 필요합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": true,
+      "bookingUrl": null,
+      "hold": true,
+      "holdReason": "산불 영향과 현재 운영 여부 우선 확인",
+      "requiresPet": false
+    },
+    {
+      "id": "daegoksa",
+      "name": "대곡사",
+      "region": "west",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "연인"
+      ],
+      "minutes": 70,
+      "indoor": false,
+      "group": "대곡사",
+      "description": "역사와 사찰 풍경을 함께 살펴볼 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "saengsong",
+      "name": "의성 생송리 마애보살좌상",
+      "region": "west",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "친구"
+      ],
+      "minutes": 45,
+      "indoor": false,
+      "group": "생송",
+      "description": "불교 문화유산을 살펴볼 후보입니다. 현장 접근성을 먼저 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "nakdan",
+      "name": "낙단보",
+      "region": "west",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "친구"
+      ],
+      "minutes": 60,
+      "indoor": false,
+      "group": "낙단",
+      "description": "강 주변 산책과 풍경을 고려할 후보입니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "uiseong-school",
+      "name": "의성향교",
+      "region": "central",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "가족"
+      ],
+      "minutes": 45,
+      "indoor": false,
+      "group": "의성향교",
+      "description": "향교 문화와 전통 공간을 살펴볼 후보입니다. 개방 여부를 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "bian-school",
+      "name": "비안향교",
+      "region": "west",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "가족"
+      ],
+      "minutes": 45,
+      "indoor": false,
+      "group": "비안",
+      "description": "짧은 문화유산 방문 후보입니다. 개방 여부를 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "heron",
+      "name": "의성왜가리생태관",
+      "region": "east",
+      "categories": [
+        "볼거리",
+        "체험"
+      ],
+      "audiences": [
+        "가족"
+      ],
+      "minutes": 90,
+      "indoor": true,
+      "group": "왜가리",
+      "description": "생태 전시 관람 후보입니다. 체험은 별도 운영 프로그램 확인이 필요합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": true,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "wood",
+      "name": "의성목재문화체험장",
+      "region": "east",
+      "categories": [
+        "체험"
+      ],
+      "audiences": [
+        "가족",
+        "연인",
+        "친구"
+      ],
+      "minutes": 90,
+      "indoor": true,
+      "group": "목재",
+      "description": "목재 만들기 체험 후보입니다. 실제 프로그램·연령·운영 장소·예약을 확인해야 합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": true,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "curling",
+      "name": "의성컬링센터",
+      "region": "central",
+      "categories": [
+        "체험"
+      ],
+      "audiences": [
+        "친구",
+        "가족"
+      ],
+      "minutes": 120,
+      "indoor": true,
+      "group": "컬링",
+      "description": "컬링 체험을 알아볼 후보입니다. 일반 방문객 체험 운영 여부와 사전 예약이 필요합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": true,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "petworld",
+      "name": "의성펫월드",
+      "region": "west",
+      "categories": [
+        "체험",
+        "볼거리"
+      ],
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "minutes": 120,
+      "indoor": false,
+      "group": "펫월드",
+      "description": "반려견 동반 여행을 알아볼 후보입니다. 입장 규정과 접종·체급 조건을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": true,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": true
+    },
+    {
+      "id": "angye-art",
+      "name": "안계미술관",
+      "region": "west",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "연인",
+        "혼자"
+      ],
+      "minutes": 60,
+      "indoor": true,
+      "group": "안계",
+      "description": "전시를 감상하는 실내 방문 후보입니다. 전시 교체 및 휴관을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "binggye-camp",
+      "name": "빙계얼음골야영장",
+      "region": "south",
+      "categories": [
+        "숙박"
+      ],
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "minutes": 90,
+      "indoor": false,
+      "group": "빙계",
+      "description": "캠핑 숙박 후보입니다. 장비 준비, 시설 운영, 예약 가능 여부를 확인해야 합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": true,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "uiseong-market",
+      "name": "의성전통시장",
+      "region": "central",
+      "categories": [
+        "특산물 쇼핑"
+      ],
+      "audiences": [
+        "가족",
+        "혼자",
+        "친구"
+      ],
+      "minutes": 60,
+      "indoor": false,
+      "group": "의성시장",
+      "description": "지역 시장 장보기 후보입니다. 장날·품목·특산물 판매 여부는 확인이 필요합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "angye-market",
+      "name": "안계시장",
+      "region": "west",
+      "categories": [
+        "특산물 쇼핑"
+      ],
+      "audiences": [
+        "가족",
+        "친구"
+      ],
+      "minutes": 60,
+      "indoor": false,
+      "group": "안계",
+      "description": "서부권 장보기 후보입니다. 개장일과 의성산 특산물 취급 점포를 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "geumseong-market",
+      "name": "금성시장",
+      "region": "south",
+      "categories": [
+        "특산물 쇼핑"
+      ],
+      "audiences": [
+        "연인",
+        "가족"
+      ],
+      "minutes": 50,
+      "indoor": false,
+      "group": "탑리",
+      "description": "남부권 장보기 후보입니다. 시장 운영일과 판매 품목을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "bongyang-market",
+      "name": "봉양시장",
+      "region": "central",
+      "categories": [
+        "특산물 쇼핑"
+      ],
+      "audiences": [
+        "친구",
+        "혼자"
+      ],
+      "minutes": 50,
+      "indoor": false,
+      "group": "봉양",
+      "description": "지역 시장 방문 후보입니다. 영업 점포와 판매 품목을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "dain-market",
+      "name": "다인시장",
+      "region": "west",
+      "categories": [
+        "특산물 쇼핑"
+      ],
+      "audiences": [
+        "가족",
+        "혼자"
+      ],
+      "minutes": 50,
+      "indoor": false,
+      "group": "다인",
+      "description": "서부권 전통시장 방문 후보입니다. 장날과 판매 품목을 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "unramsa",
+      "name": "운람사",
+      "region": "central",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자"
+      ],
+      "minutes": 60,
+      "indoor": false,
+      "group": "운람사",
+      "description": "한적한 사찰 방문 후보입니다. 운영 및 출입 가능 여부를 확인해 주세요.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    },
+    {
+      "id": "gwandeok-pagoda",
+      "name": "의성 관덕리 삼층석탑",
+      "region": "east",
+      "categories": [
+        "볼거리"
+      ],
+      "audiences": [
+        "혼자",
+        "친구"
+      ],
+      "minutes": 40,
+      "indoor": false,
+      "group": "관덕",
+      "description": "석탑 문화유산을 살펴볼 후보입니다. 표기·접근 경로의 공식 확인이 필요합니다.",
+      "verification": "pending",
+      "sourceUrl": null,
+      "sourceCheckedAt": null,
+      "researchTargets": [
+        "https://www.usc.go.kr/",
+        "https://korean.visitkorea.or.kr/"
+      ],
+      "address": null,
+      "coordinates": null,
+      "openingHours": null,
+      "closedWeekdays": null,
+      "price": null,
+      "bookingRequired": false,
+      "bookingUrl": null,
+      "hold": false,
+      "holdReason": null,
+      "requiresPet": false
+    }
+  ]
+}
