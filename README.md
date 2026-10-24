@@ -69,3 +69,17 @@ npm run data:export
 확인한 원문 상세 URL·확인일을 기록한 후에만 자료를 verified로 바꾸세요. 목록·메인 화면 URL만으로 근거를 대신하지 마세요. `npm run data:check`는 자료 형식 검사이며 사실 검증이 아닙니다.
 
 Google Fonts 연결 실패 시 시스템 글꼴로 표시됩니다. 메인 이미지는 로컬 SVG 일러스트입니다. 공식 기관 운영 서비스가 아닙니다. GitHub에 업로드하는 것과 웹서비스 공개 배포는 별개입니다.
+
+## Vercel 체험용 배포
+
+저장소 루트의 `vercel.json`에 정적 웹 배포 설정을 저장했습니다. 이 설정은 실제 음식점/API 서비스가 아닌 현재 체험용 화면을 배포합니다.
+
+1. Vercel에서 GitHub 저장소 `lailasumin-sketch/-`를 Import 합니다.
+2. Project Name을 `uidongi-pick` 등 영문 이름으로 지정합니다.
+3. **Root Directory는 기본값 `.`(저장소 루트)** 로 둡니다. 이전 안내의 `public` 대신 루트를 선택하면 저장된 `vercel.json` 설정이 적용됩니다.
+4. Framework Preset은 Other, 설치는 생략, Build Command는 `npm run data:check`, Output Directory는 `public`입니다. 저장된 설정을 사용하면 해당 값을 수동으로 반복 입력할 필요가 없습니다.
+5. Deploy를 누르고 완료된 주소에서 카페 12곳·맛집 18곳 검색과 코스 추천을 확인합니다.
+
+`public`만 웹사이트 파일로 제공하며 `server.js` 실행이나 비밀키는 현재 체험 버전에 필요하지 않습니다. 로컬의 `npm start` 실행 방식은 그대로 사용할 수 있습니다. `.vercel/` 연결 설정과 환경 변수 파일은 Git에 올리지 않도록 제외했습니다.
+
+CLI로 배포하는 경우 Vercel 계정 로그인과 정확한 프로젝트 연결을 먼저 확인해야 합니다. GitHub 업로드와 Vercel 배포 완료는 서로 다르며, 배포 URL과 READY 상태를 확인하기 전에는 공개되었다고 판단하지 않습니다.
