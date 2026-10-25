@@ -1,9 +1,10 @@
-import { searchDining, diningSlot, mockDiningStop, diningTextOptions } from './dining.js';
+import { searchDining, diningTextOptions } from './dining.js';
+import { isTime, toMinutes, toClock, planDay, summarizeDays } from './scheduler.js';
 export const durations = ['반나절', '당일치기', '1박 2일', '2박 3일'];
 export const companions = ['혼자', '연인', '친구', '가족'];
 export const interests = ['볼거리', '맛집', '카페', '체험', '특산물 쇼핑', '축제', '숙박'];
 const interestPatterns = {
-  '볼거리': /볼거리|풍경|산책|관광|자연|사진|사찰|전시|박물관|등산/,
+  '볼거리': /볼거리|풍경|산책|관광|자연|힐링|사진|사찰|전시|박물관|등산/,
   '맛집': /맛집|식당|밥집|고깃집|음식|식사|한우|마늘소|먹거리/,
   '카페': /카페|커피|디저트|찻집|베이커리|빙수/,
   '체험': /체험|만들기|액티비티|컬링/,
@@ -40,6 +41,17 @@ export function parsePrompt(text) {
     const value = `${date[1]}-${date[2].padStart(2, '0')}-${date[3].padStart(2, '0')}`;
     if (validDate(value)) result.date = value;
   }
+  if (/자연|힐링|숲|산책/.test(text)) result.themes = ['nature'];
+  const clock = text.match(/(?:(오전|오후)\s*)?(\d{1,2})(?::(\d{2})|시(?:\s*(\d{1,2})분)?)(?:\s*(?:부터|출발|시작))/);
+  if (clock) {
+    let hour=Number(clock[2]);
+    if (clock[1] === '오후' && hour < 12) hour+=12;
+    if (clock[1] === '오전' && hour === 12) hour=0;
+    const value=String(hour).padStart(2,'0')+':'+String(Number(clock[3]||clock[4]||0)).padStart(2,'0');
+    if(isTime(value)) result.startTime=value;
+  }
+  const hours=text.match(/(?:총\s*)?(\d+(?:\.\d+)?)\s*시간(?:\s*(\d+)\s*분)?/);
+  if(hours) result.availableHours=Number(hours[1])+Number(hours[2]||0)/60;
   const diningOptions = diningTextOptions(text);
   for (const key of ['maxDiningPrice','quiet','parkingOnly']) if (diningOptions[key] !== undefined) result[key] = diningOptions[key];
   const menu = text.match(/마늘|국수|피자|와플|빙수|초밥|만두|비빔밥|전통차|디카페인/);
@@ -54,104 +66,73 @@ function dayDate(value, offset) {
   const date = new Date(value + 'T00:00:00Z'); date.setUTCDate(date.getUTCDate() + offset);
   return date.toISOString().slice(0, 10);
 }
-const clock = minutes => `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
-const categoryPriority = ['체험', '특산물 쇼핑', '볼거리'];
-export function buildTrip(options, catalogue, events = [], dining = []) {
-  if (!catalogue?.places || !catalogue?.meta?.regions) throw new Error('장소 자료를 불러오지 못했습니다. 새로고침해 주세요.');
-  const count = options.duration === '2박 3일' ? 3 : options.duration === '1박 2일' ? 2 : 1;
-  const half = options.duration === '반나절';
-  const selected = [...new Set(options.interests || [])];
-  const excluded = new Set(options.excludedInterests || []);
-  const allowCandidates = options.includePending === true;
-  const chosenRegion = options.region || 'all';
-  const wantsCafe = selected.includes('카페') && !excluded.has('카페');
-  const useMock = options.includeMock === true;
-  const capacity = Math.max(1, (half ? 2 : options.pace === 'relaxed' ? 2 : options.pace === 'active' ? 4 : 3) - Number(wantsCafe));
-  const buffer = options.transport === 'public' ? 45 : 25;
-  const used = new Set(), usedGroups = new Set(), covered = new Set();
-  const requestedPlaces = selected.filter(category => categoryPriority.includes(category));
-  const wanted = requestedPlaces.length ? requestedPlaces : selected.length ? [] : excluded.has('볼거리') ? [] : ['볼거리'];
-  const environment = options.environment || 'any';
-  const eligible = catalogue.places.filter(p => !p.hold && (!p.requiresPet || options.withPet === true) && (!options.withPet || p.requiresPet || p.petFriendly === true) && (p.verification === 'verified' || allowCandidates) && (chosenRegion === 'all' || p.region === chosenRegion) && (environment === 'any' || (environment === 'indoor' ? p.indoor : !p.indoor)) && !p.categories.some(c => excluded.has(c)));
-  const baseScore = p => (p.audiences.includes(options.companion) ? 12 : 0) + p.categories.filter(c => wanted.includes(c)).length * 8 + (options.pace === 'relaxed' && p.minutes <= 70 ? 5 : 0) + (options.pace === 'active' && p.minutes >= 100 ? 6 : 0) + (p.verification === 'verified' ? 5 : 0);
-  const notes = [allowCandidates ? '현재 자료는 공식 원문 검증 전 조사 후보입니다. 명칭·권역·운영 여부부터 확인해야 하며, 이 코스는 방문을 확정하는 일정이 아닙니다.' : '공식 원문 확인이 끝난 자료만 사용합니다. 자료가 없으면 임의 장소로 채우지 않습니다.', '시간은 편집상 체류시간과 이동 여유를 배치한 예시입니다. 실제 길찾기·영업시간·가격·예약 가능 여부는 연결되어 있지 않습니다.'];
-  if (options.transport === 'public') notes.push('대중교통은 권역별 배차·정류장 접근성이 미확인입니다. 이동 여유 45분은 버스 운행시간이 아니며, 택시 이용이나 코스 축소가 필요할 수 있습니다.');
-  else notes.push('장소의 추정 권역을 묶었습니다. 좌표 기반 최단 경로나 실제 이동시간을 계산한 결과는 아닙니다.');
-  if (useMock && selected.some(c => ['맛집','카페'].includes(c))) notes.push('맛집·카페는 엑셀에서 가져온 가상 테스트 업소입니다. 이름·위치·메뉴·가격·영업·휴무·정책 모두 창작이며 실제 방문·예약 정보로 사용할 수 없습니다.');
-  const diningCategories = ['맛집','카페'].filter(c => selected.includes(c) && !excluded.has(c));
-  const days = [];
-  for (let index = 0; index < count; index++) {
-    const date = dayDate(options.date, index);
-    const weekday = date ? new Date(date + 'T00:00:00Z').getUTCDay() : null;
-    const available = eligible.filter(p => !used.has(p.id) && !usedGroups.has(p.group) && !(weekday !== null && p.closedWeekdays?.includes(weekday)));
-    const zones = chosenRegion === 'all' ? Object.keys(catalogue.meta.regions) : [chosenRegion];
-    const ranks = zones.map(region => {
-      const pool = available.filter(p => p.region === region && p.categories.some(c => wanted.includes(c)));
-      const cover = new Set(pool.flatMap(p => p.categories.filter(c => wanted.includes(c))));
-      const meals = useMock ? searchDining(dining, { ...options, region, date, query:options.diningQuery }).filter(p => diningCategories.includes(p.category) && !used.has(p.id)) : [];
-      const mealCoverage = new Set(meals.map(p => p.category)).size;
-      return { region, score: cover.size * 30 + mealCoverage * 30 + pool.sort((a,b) => baseScore(b)-baseScore(a)).slice(0,capacity).reduce((sum,p) => sum + baseScore(p),0) };
-    }).sort((a,b) => b.score-a.score);
-    const region = ranks[0]?.region || 'central';
-    const pool = available.filter(p => p.region === region && p.categories.some(c => wanted.includes(c))).sort((a,b) => baseScore(b)-baseScore(a) || a.id.localeCompare(b.id));
-    const picks = [];
-    for (const category of categoryPriority.filter(c => wanted.includes(c)).sort((a,b) => Number(covered.has(a))-Number(covered.has(b)))) {
-      if (picks.length >= capacity) break;
-      if (picks.some(p => p.categories.includes(category))) continue;
-      const pick = pool.find(p => p.categories.includes(category) && !picks.some(q => q.group === p.group));
-      if (pick) picks.push(pick);
-    }
-    for (const p of pool) {
-      if (picks.length >= capacity) break;
-      if (!picks.some(q => q.group === p.group)) picks.push(p);
-    }
-    const stops = [];
-    let minute = 600, mealAdded = false;
-    const wantsFood = selected.includes('맛집') && !excluded.has('맛집');
-    const appendDining = (category, earliest, latest) => {
-      if (useMock) {
-        const candidates = searchDining(dining, { ...options, region, date, category, query:options.diningQuery }).filter(p => !used.has(p.id));
-        const slots = candidates.map((p,rank) => ({ p, rank, slot:diningSlot(p,earliest,latest) })).filter(x => x.slot).sort((a,b) => a.slot.start-b.slot.start || a.rank-b.rank);
-        if (!slots.length) return false;
-        const {p,slot} = slots[0];
-        stops.push(mockDiningStop(p,slot));used.add(p.id);minute=slot.end+buffer;
-        return true;
-      }
-      const length = category === '맛집' ? 60 : 70;
-      if (earliest + length > latest) return false;
-      stops.push({title:catalogue.meta.regions[region]+' '+(category==='맛집'?'식당':'카페')+' 찾기',time:clock(earliest),endTime:clock(earliest+length),kind:'search',categories:[category],description:'이 조건의 실제 업소 자료가 없습니다. 가상 데이터 사용을 켜면 엑셀의 테스트 업소로 코스를 구성할 수 있습니다. 실제 업소는 직접 확인해 주세요.',query:'의성 '+catalogue.meta.regions[region].split('·')[0]+' '+category,verification:'search',reason:category+' 자료 보완 필요'});
-      minute=earliest+length+buffer;return true;
-    };
-    const limit = half ? 840 : 1050;
-    for (const p of picks) {
-      if (wantsFood && !mealAdded && minute >= 690 && minute + 60 <= limit) {
-        mealAdded = appendDining('맛집',minute,limit);
-      }
-      if (minute + p.minutes > limit) continue;
-      stops.push({ id:p.id, title:p.name, description:p.description, query:'의성 ' + p.name, time:clock(minute), endTime:clock(minute+p.minutes), minutes:p.minutes, kind:'place', region:p.region, categories:p.categories, reason:`${p.audiences.includes(options.companion) ? options.companion + ' 동행 취향 · ' : ''}${p.categories.filter(c => wanted.includes(c)).join('·')} · ${p.indoor ? '실내 중심' : '야외 중심'}`, sourceUrl:p.sourceUrl, sourceCheckedAt:p.sourceCheckedAt, verification:p.verification, bookingRequired:p.bookingRequired });
-      used.add(p.id); usedGroups.add(p.group); p.categories.forEach(c => covered.add(c));
-      minute += p.minutes + buffer;
-    }
-    if (wantsFood && !mealAdded) {
-      mealAdded = appendDining('맛집',Math.max(minute,720),half ? 900 : 1080);
-    }
-    if (wantsCafe) appendDining('카페',Math.max(minute,half ? 720 : 840),half ? 900 : 1080);
-    if (index < count - 1 && !excluded.has('숙박')) {
-      const stay = eligible.filter(p => p.region === region && p.categories.includes('숙박') && (p.id !== 'binggye-camp' || options.lodgingType === 'camping') && !excluded.has('숙박')).sort((a,b) => baseScore(b)-baseScore(a))[0];
-      if (stay) stops.push({ id:stay.id, title:stay.name+' · 숙박 문의 후보', description:stay.description, query:'의성 '+stay.name, time:'18:30', kind:'lodging', verification:stay.verification, sourceUrl:stay.sourceUrl, sourceCheckedAt:stay.sourceCheckedAt, bookingRequired:true, reason:'숙박 요청 · 예약 가능 여부 미확인' });
-      else stops.push({ title:catalogue.meta.regions[region]+' 숙소 찾기', time:'18:30', kind:'search', verification:'search', description:'이 권역의 검증된 숙소가 없습니다. 숙소 유형·객실·요금을 확인하고 직접 예약해 주세요. 체크인이 확정된 일정이 아닙니다.', query:'의성 '+catalogue.meta.regions[region].split('·')[0]+' 숙박', reason:'숙소 자료 보완 필요' });
-    }
-    const missing = [...wanted, ...diningCategories].filter(c => !stops.some(p => p.categories?.includes(c)));
-    days.push({ day:index+1, date, region:catalogue.meta.regions[region], stops, missing });
+export function defaultAvailableMinutes(duration) {
+  return duration === '반나절' ? 240 : duration === '1박 2일' ? 960 : duration === '2박 3일' ? 1440 : 480;
+}
+const visitTypes = ['볼거리','맛집','카페','체험','특산물 쇼핑'];
+function comparePlans(a,b) {
+  for(let i=0;i<a.plan.rank.length;i++) if(a.plan.rank[i]!==b.plan.rank[i])return b.plan.rank[i]-a.plan.rank[i];
+  return a.plan.signature.localeCompare(b.plan.signature);
+}
+function normalizePlace(p, selected, options, isMock) {
+  const category=p.categories.find(c=>selected.includes(c))||p.categories[0];
+  const themeMatch=Boolean(options.themes?.includes('nature')&&!p.indoor&&p.categories.includes('볼거리')&&/산|숲|계곡|공원|마을|강|낙단보/.test(p.name));
+  return {...p,title:p.name,category,kind:isMock?'mock-dining':'place',group:p.group||p.id,isMock,area:p.area||null,
+    description:isMock?`가상 테스트 업소 · ${p.menu} · 1인 예산 ${p.price.toLocaleString('ko-KR')}원(가정). ${p.atmosphere}. 실제 업소·주소·예약 정보가 아닙니다.`:p.description,
+    reason:[p.categories.filter(c=>selected.includes(c)).join('·')+' 관심사 일치',p.audiences.includes(options.companion)?options.companion+' 동행 적합':'',themeMatch?'이름·실내외 분류에 따른 자연·힐링 취향':''].filter(Boolean).join(' · '),
+    themeMatch,query:isMock?null:'의성 '+p.name,sourceUrl:p.sourceUrl||null};
+}
+export function buildTrip(options, catalogue, events = [], dining = [], travelTable = {routes:[],regionRoutes:[]}) {
+  if(!Array.isArray(catalogue?.places)||!catalogue?.meta?.regions)throw new Error('장소 자료를 불러오지 못했습니다. 새로고침해 주세요.');
+  const count=options.duration==='2박 3일'?3:options.duration==='1박 2일'?2:1;
+  const startTime=options.startTime ?? '09:30';
+  if(!isTime(startTime))throw new Error('여행 시작시간을 00:00~23:59 형식으로 입력해 주세요.');
+  const rawBudget=options.availableMinutes ?? (options.availableHours!==undefined?Number(options.availableHours)*60:defaultAvailableMinutes(options.duration));
+  const budget=Math.round(Number(rawBudget));
+  if(!Number.isFinite(Number(rawBudget))||budget<=0||Math.abs(budget-Number(rawBudget))>0.000001)throw new Error('전체 여행 가능시간은 1분 이상의 분 단위 시간으로 입력해 주세요.');
+  if(options.date&&!validDate(options.date))throw new Error('올바른 여행 날짜를 입력해 주세요.');
+  if(options.region&&options.region!=='all'&&!catalogue.meta.regions[options.region])throw new Error('지원하는 여행 권역을 선택해 주세요.');
+  const start=toMinutes(startTime);
+  if(Math.ceil(budget/count)>1440-start)throw new Error('여행 가능시간을 일수로 나누면 하루 종료시간이 자정을 넘습니다. 시작시간·여행시간·기간을 조정해 주세요.');
+  if(options.travelAllowanceMinutes!==''&&options.travelAllowanceMinutes!=null&&(!Number.isInteger(Number(options.travelAllowanceMinutes))||Number(options.travelAllowanceMinutes)<=0))throw new Error('이동 여유는 비워두거나 1분 이상의 정수로 입력해 주세요.');
+  const excluded=new Set(options.excludedInterests||[]);
+  const selected=[...new Set(options.interests||[])].filter(c=>!excluded.has(c));
+  const wanted=selected.length?selected.filter(c=>visitTypes.includes(c)):excluded.has('볼거리')?[]:['볼거리'];
+  const useMock=options.includeMock===true;
+  const tourists=catalogue.places.filter(p=>!p.hold&&p.categories.some(c=>wanted.includes(c))&&!p.categories.some(c=>excluded.has(c))&&(p.verification==='verified'||options.includePending===true)&&(!p.requiresPet||options.withPet)&&(!options.withPet||p.requiresPet||p.petFriendly===true)&&(!options.region||options.region==='all'||p.region===options.region)&&(!options.environment||options.environment==='any'||(options.environment==='indoor'?p.indoor:!p.indoor))&&p.id!=='binggye-camp').map(p=>normalizePlace(p,wanted,options,false));
+  const diningPlaces=useMock?searchDining(Array.isArray(dining)?dining:[],{...options,query:options.diningQuery,date:null}).filter(p=>wanted.includes(p.category)).map(p=>normalizePlace(p,wanted,options,true)):[];
+  const candidates=[...tourists,...diningPlaces];
+  const usedIds=new Set(),usedGroups=new Set(),previousCoverage=new Set(),days=[];
+  for(let index=0;index<count;index++) {
+    const dayBudget=Math.floor(budget/count)+Number(index<budget%count),end=start+dayBudget,date=dayDate(options.date,index);
+    const regions=options.region&&options.region!=='all'?[options.region]:Object.keys(catalogue.meta.regions);
+    const plans=regions.map(region=>({region,plan:planDay({candidates:candidates.filter(p=>p.region===region),start,end,date,interests:wanted,options,travelTable,usedIds,usedGroups,previousCoverage})})).sort(comparePlans);
+    const result=plans[0];
+    for(const id of result.plan.usedIds)usedIds.add(id);
+    for(const group of result.plan.usedGroups)usedGroups.add(group);
+    for(const c of result.plan.covered)previousCoverage.add(c);
+    days.push({day:index+1,date,region:catalogue.meta.regions[result.region]||result.region,startTime,endTime:toClock(end),budgetMinutes:dayBudget,stops:result.plan.stops,timeline:result.plan.timeline,missing:wanted.filter(c=>!result.plan.covered.has(c))});
   }
-  const scheduledEvents = selected.includes('축제') ? events.filter(event => event.verification === 'verified' && validDate(event.startDate) && validDate(event.endDate) && days.some(day => day.date && day.date >= event.startDate && day.date <= event.endDate)) : [];
-  if (selected.includes('축제')) notes.push(scheduledEvents.length ? '방문일과 겹치는 확인된 행사를 별도로 표시했습니다. 운영시간과 개최 변경을 출발 전에 다시 확인하세요.' : '여행일에 개최가 확인된 축제 자료가 없습니다. 축제를 일정에 임의로 넣지 않았습니다. 의성군 공식 공지를 확인해 주세요.');
-  if (excluded.has('숙박') && count > 1) notes.push('숙박 제외 요청에 따라 숙소 항목은 배치하지 않았습니다. 여러 날 여행의 야간 체류는 별도로 정해야 합니다.');
-  if (selected.includes('숙박') && count === 1) notes.push('숙박을 선택했지만 당일 일정입니다. 숙박을 원하면 1박 2일 이상으로 바꿔주세요.');
-  const allStops = days.flatMap(day => day.stops);
-  const missing = [...wanted, ...diningCategories].filter(c => !allStops.some(stop => stop.categories?.includes(c)));
-  if (missing.length) notes.push('조건·권역·체류시간·자료 부족으로 전체 코스에 담지 못한 항목: '+missing.join(', ')+'. 다른 권역이나 더 긴 일정을 선택해 보세요.');
-  if (options.withPet) notes.push('반려견 동반 조건을 반영해 동반용 시설 후보만 사용했습니다. 다른 시설의 동물 출입 규정은 확인되지 않아 넣지 않았습니다. 펫월드도 입장 가능 여부와 규정을 확인해야 합니다.');
-  if (environment !== 'any') notes.push((environment === 'indoor' ? '실내' : '야외')+' 중심 후보만 사용했습니다. 실내외 구분도 편집상 가정이며 현장 이동 구간은 별도 확인이 필요합니다.');
-  return { days, notes, events:scheduledEvents, candidateCount:catalogue.places.length, verifiedCount:catalogue.places.filter(p => p.verification === 'verified').length, mockDiningCount:allStops.filter(p=>p.isMock).length, missing };
+  const stats=summarizeDays(days,budget);
+  const scheduledEvents=selected.includes('축제')?(events||[]).filter(e=>e.verification==='verified'&&validDate(e.startDate)&&validDate(e.endDate)&&days.some(d=>d.date&&d.date>=e.startDate&&d.date<=e.endDate)):[];
+  const missing=wanted.filter(c=>!previousCoverage.has(c));
+  const notes=[
+    '시작시간은 각 날짜의 첫 방문지 도착 기준입니다. 전체 활동 가능시간을 일수에 나누며, 날짜 간 이동·숙박·수면은 포함하지 않습니다.',
+    '체류시간은 기존 JSON·CSV의 편집상 가정입니다. 일정은 관심사 일치, 동행 적합성, 운영시간·시간 예산 충족을 비교하는 제한된 후보 탐색으로 구성합니다. AI 또는 실시간 최단 경로를 사용하지 않습니다.',
+    '같은 날짜에는 한 권역에서 구성하고 같은 장소·시설군은 여러 날에 걸쳐 반복하지 않습니다. 동행·권역·실내외·주차·예산·반려견 조건은 데이터가 있는 범위에서만 적용합니다.'
+  ];
+  if(stats.unknownTravelLegs)notes.push(`이동시간 확인 필요: ${stats.unknownTravelLegs}구간. 숫자를 만들지 않았으며 이후 방문 시각과 운영시간 충족은 이동 미반영 최소 시각 기준입니다. 전체 종료시간을 보장하는 확정 일정이 아닙니다.`);
+  if(stats.userAllowanceMinutes)notes.push('사용자가 지정한 이동 여유를 시간 예산에 포함했습니다. 실제 이동시간이나 가상 이동시간표에서 가져온 값은 아닙니다.');
+  if(stats.fictionalTravelMinutes)notes.push('가상 이동시간이 포함되어 있습니다. 구간별 데이터 출처를 표시하며 실제 지도·도로 이동시간이 아닙니다.');
+  if(stats.unknownOpeningCount)notes.push(`운영시간 확인 필요: ${stats.unknownOpeningCount}곳. 운영시간이 없는 장소의 실제 방문 가능 여부는 보장하지 않습니다.`);
+  if(!options.date)notes.push('여행 날짜를 선택하지 않아 요일별 휴무를 확인하지 못했습니다. 등록된 시각과 체류시간만 비교합니다.');
+  if(options.includePending)notes.push('관광 장소는 공식 원문 검증 전 조사 후보가 포함됩니다. 실제 여부·운영 상태·정확한 읍면을 확인해야 합니다.');
+  if(stats.commercialMockCount||diningPlaces.length)notes.push('맛집·카페는 엑셀에서 가져온 가상 테스트 업소입니다. 메뉴·가격·운영·가상 읍면 배치 모두 창작이며 실제 방문·예약 정보가 아닙니다.');
+  if(missing.length)notes.push('조건·영업시간·시간 예산·자료 부족으로 넣지 않은 관심사: '+missing.join(', ')+'. 조건에 맞지 않는 장소나 검색 안내를 방문 일정으로 채우지 않습니다.');
+  if(selected.includes('축제'))notes.push(scheduledEvents.length?'방문일과 겹치는 확인된 행사를 별도로 표시했습니다.':'확인된 개최 기간이 없어 축제를 일정에 임의로 넣지 않았습니다.');
+  const lodgingSuggestions=[];
+  if(count>1&&!excluded.has('숙박'))lodgingSuggestions.push('숙소 찾기: 숙소·예약 자료가 미확인입니다. 야간 체류는 별도로 정하고 확정되지 않은 체크인을 시간표에 넣지 않았습니다.');
+  if(excluded.has('숙박')&&count>1)notes.push('숙박 제외 요청을 반영했습니다. 여러 날 여행의 야간 체류는 별도 확인이 필요합니다.');
+  if(selected.includes('숙박')&&count===1)notes.push('당일 일정에는 숙박을 넣지 않았습니다. 숙박이 필요하면 여행 기간을 늘려주세요.');
+  return {days,notes,events:scheduledEvents,stats,missing,lodgingSuggestions,candidateCount:catalogue.places.length,verifiedCount:catalogue.places.filter(p=>p.verification==='verified').length,mockDiningCount:days.flatMap(d=>d.stops).filter(p=>p.isMock).length};
 }

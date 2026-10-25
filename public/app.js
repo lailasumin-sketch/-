@@ -1,7 +1,8 @@
+import { loadTripData } from './load-data.js';
 import { searchDining, diningTextOptions } from './dining.js';
-import { durations, companions, interests, parsePrompt, buildTrip } from './planner.js';
-const defaults = () => ({ duration:'1박 2일', companion:'연인', interests:['볼거리','맛집'], excludedInterests:[], transport:'car', date:'', region:'all', environment:'any', pace:'normal', withPet:false, lodgingType:'any', includePending:true, includeMock:true, diningQuery:'', maxDiningPrice:'', parkingOnly:false, quiet:false });
-let state = defaults(), currentTrip, catalogue, events = [], dining = [];
+import { durations, companions, interests, parsePrompt, buildTrip, defaultAvailableMinutes } from './planner.js';
+const defaults = () => ({ duration:'1박 2일', companion:'연인', interests:['볼거리','맛집'], excludedInterests:[], transport:'car', date:'', region:'all', environment:'any', pace:'normal', withPet:false, lodgingType:'any', includePending:true, includeMock:true, diningQuery:'', maxDiningPrice:'', parkingOnly:false, quiet:false, startTime:'09:30', availableHours:16, travelAllowanceMinutes:'', themes:[] });
+let state = defaults(), currentTrip, catalogue, events = [], dining = [], travelTable = {routes:[],regionRoutes:[]}, dataWarnings = [];
 const $ = selector => document.querySelector(selector);
 const icons = { '반나절':'☀', '당일치기':'🌤', '1박 2일':'🌙', '2박 3일':'🧳', '혼자':'🚶', '연인':'♡', '친구':'🙌', '가족':'🏡', '볼거리':'🌿', '맛집':'🍚', '카페':'☕', '체험':'🎨', '특산물 쇼핑':'🛍', '축제':'🎉', '숙박':'🛏' };
 function element(tag, text, className) {
@@ -22,15 +23,15 @@ function renderChoices() {
         if (key==='interests') {
           if (state.interests.includes(value)) { state.interests=state.interests.filter(v=>v!==value); state.excludedInterests=[...new Set([...state.excludedInterests,value])]; }
           else { state.interests.push(value); state.excludedInterests=state.excludedInterests.filter(v=>v!==value); }
-        } else state[key]=value;
+        } else { state[key]=value; if(key==='duration'){state.availableHours=defaultAvailableMinutes(value)/60;$('#available-hours').value=state.availableHours;} }
         renderChoices(); container.children[values.indexOf(value)].focus({preventScroll:true});
       }); container.append(button);
     });
   }
 }
-const controls = {transport:'#transport',date:'#travel-date',region:'#region',environment:'#environment',pace:'#pace',lodgingType:'#lodging-type',diningQuery:'#dining-query',maxDiningPrice:'#max-dining-price'};
-function readControls() { for (const [key,selector] of Object.entries(controls)) state[key]=$(selector).value; state.includePending=$('#include-pending').checked; state.withPet=$('#with-pet').checked; state.includeMock=$('#include-mock').checked; state.parkingOnly=$('#parking-only').checked; state.quiet=$('#quiet-only').checked; }
-function syncControls() { for (const [key,selector] of Object.entries(controls)) $(selector).value=state[key]; $('#include-pending').checked=state.includePending; $('#with-pet').checked=state.withPet; $('#include-mock').checked=state.includeMock; $('#parking-only').checked=state.parkingOnly; $('#quiet-only').checked=state.quiet; }
+const controls = {transport:'#transport',date:'#travel-date',region:'#region',environment:'#environment',pace:'#pace',lodgingType:'#lodging-type',diningQuery:'#dining-query',maxDiningPrice:'#max-dining-price',startTime:'#start-time',availableHours:'#available-hours',travelAllowanceMinutes:'#travel-allowance'};
+function readControls() { for (const [key,selector] of Object.entries(controls)) state[key]=$(selector).value; state.includePending=$('#include-pending').checked; state.withPet=$('#with-pet').checked; state.includeMock=$('#include-mock').checked; state.parkingOnly=$('#parking-only').checked; state.quiet=$('#quiet-only').checked; state.themes=$('#nature-theme').checked?['nature']:[]; }
+function syncControls() { for (const [key,selector] of Object.entries(controls)) $(selector).value=state[key]; $('#include-pending').checked=state.includePending; $('#with-pet').checked=state.withPet; $('#include-mock').checked=state.includeMock; $('#parking-only').checked=state.parkingOnly; $('#quiet-only').checked=state.quiet; $('#nature-theme').checked=state.themes?.includes('nature')||false; }
 function renderCatalogue() {
   if (!catalogue) return;
   const query=$('#catalogue-search').value.trim().toLowerCase();
@@ -43,9 +44,9 @@ function renderCatalogue() {
   $('#catalogue-filter-status').textContent=`검색 결과 ${regular.length+mocks.length}곳 (관광 후보 ${regular.length}곳 / 가상 업소 ${mocks.length}곳)`;
   const cards=mocks.map(p=>{
     const card=element('article','','place-card mock-card'); card.dataset.mock='true';
-    card.append(badge('fictional'),element('h3',p.name),element('p',`${p.category} · ${p.cuisine} · 가상 ${p.area} 배치`,'place-meta'),element('p',p.menu),element('p',`1인 예산 ${p.price.toLocaleString('ko-KR')}원 · ${p.minutes}분 체류 (모두 가정)`),element('p',`${p.atmosphere} · ${p.audiences.join('·')} · ${p.space}`,'place-meta'),element('p',`가상 영업 ${p.openTime}–${p.closeTime} / ${p.closedLabel}요일 휴무${p.breakTime?' / 휴식 '+p.breakTime.join('–'):''}`,'place-meta'),element('p',`주차 ${p.parking?'있음':'없음'} · 반려견 ${p.petPolicy} · 예약 ${p.reservation} (가정)`,'place-meta'),element('p','실제 업소·주소·전화·예약 링크가 없는 창작 데이터입니다.','mock-notice'));
+    card.append(badge('fictional'),element('h3',p.name),element('p',`${p.category} · ${p.cuisine} · 가상 ${p.area} 배치`,'place-meta'),element('p',p.menu),element('p',`1인 예산 ${p.price.toLocaleString('ko-KR')}원 · ${p.minutes}분 체류 (모두 가정)`),element('p',`${p.atmosphere} · ${p.audiences.join('·')} · ${p.space}`,'place-meta'),element('p',p.openTime&&p.closeTime?`가상 영업 ${p.openTime}–${p.closeTime} / ${p.closedLabel||'확인 필요'}요일 휴무${p.breakTime?' / 휴식 '+p.breakTime.join('–'):''}`:'운영시간 확인 필요','place-meta'),element('p',`주차 ${p.parking?'있음':'없음'} · 반려견 ${p.petPolicy} · 예약 ${p.reservation} (가정)`,'place-meta'),element('p','실제 업소·주소·전화·예약 링크가 없는 창작 데이터입니다.','mock-notice'));
     const button=element('button','이 업소로 당일 코스 테스트 ↗','text-button');button.type='button';
-    button.addEventListener('click',()=>{readControls();state.interests=[p.category];state.excludedInterests=[];state.duration='당일치기';state.region=p.region;state.diningQuery=p.name.replace('[가상] ','');state.includeMock=true;syncControls();renderChoices();recommend();});
+    button.addEventListener('click',()=>{readControls();state.interests=[p.category];state.excludedInterests=[];state.duration='당일치기';state.availableHours=defaultAvailableMinutes(state.duration)/60;state.region=p.region;state.diningQuery=p.name.replace('[가상] ','');state.includeMock=true;syncControls();renderChoices();recommend();});
     card.append(button);return card;
   });
   cards.push(...regular.map(p=>{
@@ -61,30 +62,52 @@ function renderCatalogue() {
 function recommend() {
   readControls();
   if(!catalogue) { $('#data-status').textContent='장소 자료를 불러오지 못했어요. 인터넷 연결 및 서버 실행을 확인하고 새로고침해 주세요.'; return; }
-  currentTrip=buildTrip(state,catalogue,events,dining); currentTrip.options=structuredClone(state);
+  try { currentTrip=buildTrip(state,catalogue,events,dining,travelTable); }
+  catch(error) { currentTrip=null;$('#results').hidden=true;$('#data-status').textContent=error.message;$('#data-status').scrollIntoView({block:'center'});return; }
+  currentTrip.notes.unshift(...dataWarnings);currentTrip.options=structuredClone(state);
   $('#results').hidden=false;
   $('#results-title').textContent=currentTrip.mockDiningCount?'가상 업소가 포함된 테스트 코스':state.includePending?'취향에 맞춰 고른 확인 전 후보 코스':'확인된 자료로 구성한 코스';
   const chosen=catalogue.meta.regions[state.region]||'취향에 맞는 권역';
-  $('#result-summary').textContent=`${state.companion==='혼자'?'혼자':state.companion+' 동행'} · ${state.duration} · ${chosen}${state.date?' · '+state.date+' 출발':''}. 취향·권역·시간 여유를 반영했습니다.`;
-  $('#result-tags').replaceChildren(...[state.duration,state.companion,...state.interests,state.environment==='indoor'?'실내 중심':state.environment==='outdoor'?'야외 중심':'실내·야외',state.pace==='relaxed'?'느긋하게':state.pace==='active'?'활동적으로':'적당하게',state.transport==='car'?'자가용':'대중교통·택시',...(state.withPet?['반려견 동반']:[]),...(state.lodgingType==='camping'?['캠핑 후보']:[]),...(state.includeMock?['가상 업소 테스트']:[]),...(state.maxDiningPrice?['업소별 1인 '+Number(state.maxDiningPrice).toLocaleString('ko-KR')+'원 이하']:[]),...(state.diningQuery?[state.diningQuery]:[])].map(v=>element('span',v)));
+  $('#result-summary').textContent=`${state.companion==='혼자'?'혼자':state.companion+' 동행'} · ${state.duration} · ${chosen}${state.date?' · '+state.date+' 출발':''}. 매일 ${state.startTime} 시작 · 전체 활동 ${state.availableHours}시간 예산입니다.`;
+  $('#result-tags').replaceChildren(...[state.duration,state.companion,...state.interests,state.environment==='indoor'?'실내 중심':state.environment==='outdoor'?'야외 중심':'실내·야외',state.pace==='relaxed'?'느긋하게':state.pace==='active'?'활동적으로':'적당하게',state.transport==='car'?'자가용':'대중교통·택시',...(state.withPet?['반려견 동반']:[]),...(state.lodgingType==='camping'?['캠핑 후보']:[]),...(state.includeMock?['가상 업소 테스트']:[]),...(state.maxDiningPrice?['업소별 1인 '+Number(state.maxDiningPrice).toLocaleString('ko-KR')+'원 이하']:[]),...(state.diningQuery?[state.diningQuery]:[]),...(state.themes?.includes('nature')?['자연·힐링']:[])].map(v=>element('span',v)));
+  const stats=currentTrip.stats;
+  const metric=(label,value,detail)=>{const card=element('div','','stat-card');card.append(element('span',label),element('strong',value),element('small',detail));return card;};
+  $('#trip-stats').replaceChildren(
+    metric('총 방문 장소',stats.totalVisitCount+'곳','같은 장소 중복 없음'),
+    metric('총 체류시간',stats.totalStayMinutes+'분','기존 자료의 가정값'),
+    metric('총 이동시간',stats.totalTravelMinutes===null?'확인 필요':stats.totalTravelMinutes+'분',stats.unknownTravelLegs?`등록·입력값 ${stats.knownTravelMinutes}분 / 미확인 ${stats.unknownTravelLegs}구간`:`가상 ${stats.fictionalTravelMinutes}분 · 사용자 여유 ${stats.userAllowanceMinutes}분`),
+    metric('지역 상권 연계 장소',stats.commercialCount+'곳',`가상 ${stats.commercialMockCount} · 조사 후보 ${stats.commercialCandidateCount} · 원문 확인 ${stats.commercialVerifiedCount}`)
+  );
+  $('#schedule-status').textContent=`활동 예산 ${stats.budgetMinutes}분 중 계산 가능한 합계 ${stats.plannedMinutes}분(대기 ${stats.totalWaitMinutes}분 포함). `+(stats.timingProvisional?'이동시간이 미확인인 임시 일정입니다. 이후 방문 시각은 최소 시각이며 실제 종료시간을 보장하지 않습니다.':'등록·입력한 시간 기준으로 예산 내 배치했습니다. 실제 운영·이동·예약은 확인이 필요합니다.')+` 운영시간 미확인 ${stats.unknownOpeningCount}곳.`;
   $('#itinerary').replaceChildren(...currentTrip.days.map(day=>{
     const card=element('article','','day-card');
-    card.append(element('h3',`DAY ${String(day.day).padStart(2,'0')} · ${day.region}`),element('p',(day.date?day.date+' · ':'')+'체류 가정과 이동 여유를 배치한 예시','day-meta'));
-    if(!day.stops.length) card.append(element('p','이 조건으로 구성할 수 있는 확인된 자료가 없습니다. 권역·실내외 조건을 바꾸거나, 미확인 후보 포함 여부를 확인해 주세요.','empty-state'));
-    day.stops.forEach(stop=>{
-      const row=element('div','','stop'),time=element('time',stop.time),content=element('div'); time.dateTime=stop.time;
-      content.append(badge(stop.verification),element('h4',stop.title),element('p',stop.description),element('p',stop.reason||'','reason'));
-      if(stop.endTime) content.append(element('p',`${stop.time}–${stop.endTime} · ${stop.isMock?'가상 영업시간·휴무를 반영한 테스트':'편집상 체류시간'}`,'source-note'));
-      if(stop.bookingRequired) content.append(element('p','운영·예약 가능 여부를 확인한 뒤 일정 확정','source-note'));
-      if(stop.isMock) { row.dataset.mock='true'; content.append(element('p','[가상] 실제 업소가 아니므로 지도·예약 기능을 제공하지 않습니다.','mock-notice')); }
-      else if(stop.query) content.append(mapLink(stop.query));
-      if(stop.sourceUrl) content.append(externalLink('확인한 원문 ↗',stop.sourceUrl,'source-link'));
-      row.append(time,content); card.append(row);
+    card.append(element('h3',`DAY ${String(day.day).padStart(2,'0')} · ${day.region}`),element('p',`${day.date?day.date+' · ':''}${day.startTime}–${day.endTime} · 활동 예산 ${day.budgetMinutes}분 · 방문 ${day.stops.length}곳`,'day-meta'));
+    if(!day.stops.length)card.append(element('p','조건·운영시간·체류시간·활동 예산을 충족하는 방문지가 없습니다. 시간이나 조건을 조정해 주세요.','empty-state'));
+    day.timeline.forEach(item=>{
+      const row=element('div','','stop timeline-item'),time=element('span',item.time+(item.endTime?'–'+item.endTime:' → 미정'),'timeline-time'),content=element('div');
+      row.dataset.kind=item.kind;
+      if(item.kind==='travel'){
+        row.classList.add('transfer-row');
+        content.append(element('h4','이동 · '+item.from+' → '+item.to),element('p',item.label+(item.minutes===null?'':' · '+item.minutes+'분')),element('p','근거: '+(item.source||'구간·권역별 이동 자료 없음'),'source-note'));
+      }else if(item.kind==='wait'){
+        row.classList.add('wait-row');content.append(element('h4',item.label),element('p',item.minutes+'분 · 등록 운영시간에 맞춘 대기/휴식'));
+      }else{
+        content.append(badge(item.verification),element('h4',item.title),element('p',item.categories.join(' · ')+' / '+(item.isMock?'가상 테스트 데이터':item.verification==='verified'?'실제 장소 · 원문 확인':'관광 장소 조사 후보 · 실제 여부 미검증'),'place-meta'),element('p',item.description),element('p',item.reason,'reason'));
+        content.append(element('p',`체류 ${item.minutes}분(자료의 가정값) · 읍·면: ${item.area?(item.isMock?'가상 배치 '+item.area:item.area):'확인 필요'} · ${day.region}`,'source-note'));
+        content.append(element('p',item.openingLabel+(item.dateChecked?'':state.date?' · 휴무정보 확인 필요':' · 여행일 미지정으로 휴무 확인 필요'),'source-note'));
+        if(item.incomingTravel)content.append(element('p',`직전 구간: ${item.incomingTravel.label}${item.incomingTravel.minutes===null?'':' '+item.incomingTravel.minutes+'분'} / 근거: ${item.incomingTravel.source||'등록 자료 없음'}`,'source-note'));
+        if(item.bookingRequired)content.append(element('p','운영·예약 가능 여부를 확인한 뒤 방문 확정','source-note'));
+        if(item.isMock){row.dataset.mock='true';content.append(element('p','[가상] 실제 업소가 아니므로 지도·예약 기능을 제공하지 않습니다.','mock-notice'));}
+        else if(item.query)content.append(mapLink(item.query));
+        if(item.sourceUrl)content.append(externalLink('확인한 원문 ↗',item.sourceUrl,'source-link'));
+      }
+      if(item.provisional)content.append(element('p','이동 미확인 · 표시 시각은 확정 시각이 아닙니다.','timing-note'));
+      row.append(time,content);card.append(row);
     });
-    if(day.missing.length) card.append(element('p','이 날짜에 배치하지 않은 관심사: '+day.missing.join(', ')+' — 다른 날짜의 코스도 확인해 주세요.','missing-note'));
+    if(day.missing.length)card.append(element('p','이 날짜에 배치하지 않은 관심사: '+day.missing.join(', ')+' — 조건·운영시간·시간 예산 또는 다른 날짜의 코스를 확인해 주세요.','missing-note'));
     return card;
   }));
-  $('#dynamic-notes').replaceChildren(...currentTrip.notes.map(n=>element('p',n)));
+  $('#dynamic-notes').replaceChildren(...[...currentTrip.notes,...currentTrip.lodgingSuggestions].map(n=>element('p',n)));
   $('#event-results').replaceChildren(...currentTrip.events.map(event=>{ const card=element('article','','event-card'); card.append(element('h3',event.name),element('p',`${event.startDate} ~ ${event.endDate}`),externalLink('행사 공식 안내 ↗',event.sourceUrl)); return card; }));
   $('#copy-status').textContent=''; $('#results').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -110,31 +133,39 @@ $('#prompt-submit').addEventListener('click',()=>{
   else if(parsed.interests.some(c=>['맛집','카페'].includes(c))&&!parsed.diningQuery) parsed.diningQuery='';
   if(!Object.keys(parsed).some(k=>!['interests','excludedInterests'].includes(k))&&!parsed.interests.length&&!parsed.excludedInterests.length){$('#prompt-feedback').textContent='조건을 찾지 못했어요. “아이와 당일치기, 실내 체험”처럼 적어주세요.';return;}
   readControls();
+  if(parsed.duration&&parsed.availableHours===undefined)parsed.availableHours=defaultAvailableMinutes(parsed.duration)/60;
   const prior=state.interests;
   state={...state,...parsed,interests:(parsed.interests.length?parsed.interests:prior).filter(c=>!parsed.excludedInterests.includes(c))};
   renderChoices();syncControls();
-  const recognized=[parsed.duration,parsed.companion,...parsed.interests,...parsed.excludedInterests.map(c=>c+' 제외'),parsed.environment==='indoor'?'실내 중심':parsed.environment==='outdoor'?'야외 중심':'',parsed.region?catalogue?.meta.regions[parsed.region]:'',parsed.pace==='relaxed'?'느긋하게':parsed.pace==='active'?'활동적으로':'',parsed.transport==='public'?'대중교통':parsed.transport==='car'?'자가용':'',parsed.date,parsed.withPet?'반려견 동반':'',parsed.lodgingType==='camping'?'캠핑 후보':'',parsed.diningQuery,parsed.maxDiningPrice?'업소별 1인 '+parsed.maxDiningPrice+'원 이하':'',parsed.quiet?'조용한 업소':'',parsed.parkingOnly?'주차 가능':''].filter(Boolean);
+  const recognized=[parsed.duration,parsed.companion,...parsed.interests,...parsed.excludedInterests.map(c=>c+' 제외'),parsed.environment==='indoor'?'실내 중심':parsed.environment==='outdoor'?'야외 중심':'',parsed.region?catalogue?.meta.regions[parsed.region]:'',parsed.pace==='relaxed'?'느긋하게':parsed.pace==='active'?'활동적으로':'',parsed.transport==='public'?'대중교통':parsed.transport==='car'?'자가용':'',parsed.date,parsed.withPet?'반려견 동반':'',parsed.lodgingType==='camping'?'캠핑 후보':'',parsed.diningQuery,parsed.maxDiningPrice?'업소별 1인 '+parsed.maxDiningPrice+'원 이하':'',parsed.quiet?'조용한 업소':'',parsed.parkingOnly?'주차 가능':'',parsed.startTime?parsed.startTime+' 시작':'',parsed.availableHours?parsed.availableHours+'시간 활동':'',parsed.themes?.includes('nature')?'자연·힐링':''].filter(Boolean);
   $('#prompt-feedback').textContent='반영: '+recognized.join(' · ')+'. 언급하지 않은 조건은 현재 선택을 유지해요.';recommend();
 });
+$('#nature-theme').addEventListener('change',()=>{if($('#nature-theme').checked&&!state.interests.includes('볼거리')){state.interests.push('볼거리');state.excludedInterests=state.excludedInterests.filter(c=>c!=='볼거리');renderChoices();}});
 for(const button of document.querySelectorAll('[data-interest]')) button.addEventListener('click',()=>{if(!state.interests.includes(button.dataset.interest))state.interests.push(button.dataset.interest);state.excludedInterests=state.excludedInterests.filter(c=>c!==button.dataset.interest);renderChoices();$('#planner').scrollIntoView({behavior:'smooth'});});
 for(const id of ['catalogue-search','catalogue-category','catalogue-region','catalogue-budget']) document.getElementById(id).addEventListener('input',renderCatalogue);
 $('#copy-trip').addEventListener('click',async()=>{
   if(!currentTrip)return;
-  const text=['의동이 픽 · '+currentTrip.options.duration,'확인 전 후보 코스 · 운영·가격·예약·실제 이동시간 확인 필요',...currentTrip.days.flatMap(day=>['\nDAY '+day.day+' · '+day.region+(day.date?' · '+day.date:''),...day.stops.map(s=>`${s.time} ${s.title}\n${s.description}\n${s.isMock?'[가상] 창작 데이터 · 실제 방문·예약 불가':s.sourceUrl||'원문 확인 전 / 업체 직접 찾기'}`)]),'\n확인 사항',...currentTrip.notes].join('\n');
+  const stats=currentTrip.stats;
+  const text=['의동이 픽 · '+currentTrip.options.duration,
+    `방문 ${stats.totalVisitCount}곳 / 체류 ${stats.totalStayMinutes}분 / 이동 ${stats.totalTravelMinutes===null?'확인 필요 ('+stats.unknownTravelLegs+'구간 미확인)':stats.totalTravelMinutes+'분'} / 대기 ${stats.totalWaitMinutes}분`,
+    `지역 상권 연계 장소 ${stats.commercialCount}곳 (가상 ${stats.commercialMockCount}, 조사 후보 ${stats.commercialCandidateCount}, 원문 확인 ${stats.commercialVerifiedCount})`,
+    ...currentTrip.days.flatMap(day=>['\nDAY '+day.day+' · '+day.region+(day.date?' · '+day.date:''),...day.timeline.map(s=>{
+      const time=s.time+(s.endTime?'–'+s.endTime:' → 미정');
+      if(s.kind==='travel')return `${time} 이동 ${s.from} → ${s.to} / ${s.label} / 근거 ${s.source||'자료 없음'}`;
+      if(s.kind==='wait')return `${time} ${s.label} ${s.minutes}분`;
+      return `${time} ${s.title} / ${s.categories.join('·')} / 체류 ${s.minutes}분\n읍·면 ${s.area||'확인 필요'} / ${s.openingLabel} / ${s.provisional?'이동 미확인 최소 시각':'등록·입력값 기준'}\n${s.reason}\n${s.isMock?'[가상] 실제 방문·예약 불가':s.sourceUrl||'관광 장소 조사 후보'}`;
+    })]),'\n확인 사항',...currentTrip.notes,...currentTrip.lodgingSuggestions].join('\n');
   try{await navigator.clipboard.writeText(text);$('#copy-status').textContent='확인 사항과 함께 일정을 복사했어요.';}
   catch{$('#copy-status').textContent='아래 내용을 직접 복사해 주세요.';const area=element('textarea');area.value=text;area.readOnly=true;area.setAttribute('aria-label','복사할 여행 일정');$('#copy-status').append(area);area.select();}
 });
 async function init(){
-  renderChoices();
+  renderChoices();syncControls();
   const buttons=[$('#trip-form button[type="submit"]'),$('#prompt-submit')];buttons.forEach(b=>b.disabled=true);
   try{
-    const responses=await Promise.all([fetch('/catalogue.json'),fetch('/events.json'),fetch('/dining.json')]);
-    if(responses.some(r=>!r.ok))throw new Error('자료 HTTP 오류');
-    const [data,eventData,diningData]=await Promise.all(responses.map(r=>r.json()));
-    if(!Array.isArray(data.places)||!data.meta?.regions||!Array.isArray(eventData.events)||!Array.isArray(diningData.places)||diningData.places.some(p=>!p.isMock||p.verification!=='fictional'))throw new Error('자료 형식 오류');
-    catalogue=data;events=eventData.events;dining=diningData.places;
-    $('#data-status').textContent=`조사 후보 ${data.places.length}곳 · 공식 원문 확인 ${data.places.filter(p=>p.verification==='verified').length}곳. 가상 맛집·카페 ${dining.length}곳을 검색·코스 테스트에 사용합니다. [가상] 업소는 실제 방문하거나 예약할 수 없어요.`;
+    const data=await loadTripData();
+    ({catalogue,dining,events,travelTable}=data);dataWarnings=data.warnings;
+    $('#data-status').textContent=`관광 후보 ${catalogue.places.length}곳 · 가상 맛집·카페 ${dining.length}곳. 관광지 운영시간·읍면과 이동시간은 미확인 자료가 있습니다. `+dataWarnings.join(' ');
     renderCatalogue();buttons.forEach(b=>b.disabled=false);
-  }catch{$('#data-status').textContent='장소 자료를 불러오지 못했습니다. npm start로 서버가 실행 중인지 확인한 후 새로고침해 주세요.';$('#catalogue-count').textContent='장소 자료 로딩 실패';}
+  }catch(error){$('#data-status').textContent=error.message;$('#catalogue-count').textContent='장소 자료 로딩 실패';}
 }
 init();

@@ -1,0 +1,9 @@
+{
+  "meta": {
+    "status": "unavailable",
+    "description": "기존 데이터에는 구간·권역별 이동시간표, 지도 API, 도로망 자료가 없습니다. 숫자를 새로 만들어 넣지 않았습니다. 빈 목록은 이동 0분을 뜻하지 않습니다.",
+    "schema": "routes: from, to, transport, minutes, basis(fictional/published), source, bidirectional(선택). regionRoutes: fromRegion, toRegion 및 같은 필드."
+  },
+  "routes": [],
+  "regionRoutes": []
+}

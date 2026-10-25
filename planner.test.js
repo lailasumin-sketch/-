@@ -71,8 +71,9 @@ test('보류 장소는 모든 동행과 실내외 조건에서 추천 제외',()
 });
 test('음식점·숙소 자료가 없을 때 실재하는 추천 업소처럼 표시하지 않음',()=>{
  const result=trip({interests:['맛집','숙박']});
- assert.ok(result.days.flatMap(d=>d.stops).every(s=>s.kind==='search'));
- assert.ok(result.days[0].stops.some(s=>s.title.includes('숙소 찾기')));
+ assert.equal(result.days.flatMap(d=>d.stops).length,0);
+ assert.ok(result.missing.includes('맛집'));
+ assert.ok(result.lodgingSuggestions.some(s=>s.includes('숙소 찾기')));
 });
 test('날짜별 휴무와 확인된 축제의 개최 기간을 검사',()=>{
  const data=structuredClone(catalogue);

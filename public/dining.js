@@ -34,10 +34,10 @@ export function searchDining(places, options={}) {
   if(merged.maxDiningPrice&&p.price>Number(merged.maxDiningPrice))return false;
   if(merged.parkingOnly&&!p.parking)return false;
   if(merged.quiet&&p.noise!=='낮음')return false;
-  if(merged.environment==='outdoor'&&!p.space.includes('테라스'))return false;
+  if(merged.environment==='outdoor'&&!p.space?.includes('테라스'))return false;
   if(merged.environment==='indoor'&&merged.withPet&&p.petPolicy==='테라스만')return false;
   if(merged.withPet&&p.petPolicy==='불가')return false;
-  if(merged.date){const day=new Date(merged.date+'T00:00:00Z').getUTCDay();if(p.closedWeekdays.includes(day))return false;}
+  if(merged.date){const day=new Date(merged.date+'T00:00:00Z').getUTCDay();if(p.closedWeekdays?.includes(day))return false;}
   const searchable=normalized([p.name,p.menu,p.cuisine,p.area,p.category,p.atmosphere,...p.tags].join(' '));
   if(terms&&!searchable.includes(terms))return false;
   return true;
