@@ -31,8 +31,8 @@
   "file_direct_execution": "미검증: 관리 브라우저의 URLBlocklist가 file://를 차단. 정책 변경·우회하지 않음.",
   "file_relocation_execution": "미검증: file:// 관리 정책 차단. 상대경로 파일 존재 정적 검사와 서버 경로 이동은 별도 검증.",
   "source_tests": {
-    "executed": 53,
-    "passed": 53,
+    "executed": 61,
+    "passed": 61,
     "failed": 0,
     "skipped": 0,
     "command": "npm run build"
