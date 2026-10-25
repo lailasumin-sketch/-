@@ -101,3 +101,9 @@ Google Fonts 연결 실패 시 시스템 글꼴로 표시됩니다. 메인 이�
 `public`만 웹사이트 파일로 제공하며 `server.js` 실행이나 비밀키는 현재 체험 버전에 필요하지 않습니다. 로컬의 `npm start` 실행 방식은 그대로 사용할 수 있습니다. `.vercel/` 연결 설정과 환경 변수 파일은 Git에 올리지 않도록 제외했습니다.
 
 CLI로 배포하는 경우 Vercel 계정 로그인과 정확한 프로젝트 연결을 먼저 확인해야 합니다. GitHub 업로드와 Vercel 배포 완료는 서로 다르며, 배포 URL과 READY 상태를 확인하기 전에는 공개되었다고 판단하지 않습니다.
+
+## USB 제출판
+
+`scripts/build-usb.py`는 기존 웹앱을 유지하면서 USB용 사본을 만듭니다. 포함된 포터블 Windows Node와 BAT 실행, 내장 데이터 classic-script HTML 보조 실행을 준비하며 USB판 검색 결과 대시보드도 추가합니다. 심사위원 실행에는 npm 설치가 필요하지 않습니다.
+
+빌드·검증 범위, Windows/file:// 미검증 항목과 대체 실행은 [USB 검증 보고서](packaging/개발_검증보고서.md), 심사위원용 설명은 [README 템플릿](packaging/README.txt)을 참고하세요. 발표자료 생성 스크립트는 `scripts/create-usb-presentation.py`이며 실제 패키지 화면 캡처를 사용합니다. 인터넷이 끊긴 Linux 브라우저 검증과 실제 Windows 실행 검증은 구분합니다.
