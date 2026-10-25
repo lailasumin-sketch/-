@@ -1,3 +1,4 @@
+import { renderItineraryDay, itineraryOverview, pricePresentation } from './itinerary-cards.js';
 import { loadTripData } from './load-data.js';
 import { searchDining, diningTextOptions } from './dining.js';
 import { durations, companions, interests, parsePrompt, buildTrip, defaultAvailableMinutes } from './planner.js';
@@ -15,7 +16,7 @@ function mapLink(query) { return externalLink('지도에서 확인 ↗',`https:/
 function badge(status, hold = false) { return element('span',hold ? '방문 후보에서 보류' : status === 'fictional' ? '[가상] 테스트 전용' : status === 'verified' ? '원문 확인' : status === 'search' ? '업체 직접 찾기' : '원문·운영 확인 전', 'status-badge'+(status==='verified'?' verified':'')); }
 function renderReasons(reasons) {
   const block=element('div','','recommendation-reasons');
-  block.append(element('p','추천 이유','reasons-title'));
+  block.append(element('p','의동이가 추천한 이유','reasons-title'));
   const list=element('ul');
   list.setAttribute('aria-label','추천 이유');
   for(const reason of reasons){
@@ -78,7 +79,9 @@ function recommend() {
   catch(error) { currentTrip=null;$('#results').hidden=true;$('#data-status').textContent=error.message;$('#data-status').scrollIntoView({block:'center'});return; }
   currentTrip.notes.unshift(...dataWarnings);currentTrip.options=structuredClone(state);
   $('#results').hidden=false;
-  $('#results-title').textContent=currentTrip.mockDiningCount?'가상 업소가 포함된 테스트 코스':state.includePending?'취향에 맞춰 고른 확인 전 후보 코스':'확인된 자료로 구성한 코스';
+  $('#results-title').textContent='나만의 의성 '+state.duration+' 여행';
+  $('#trip-data-label').textContent=currentTrip.mockDiningCount?'가상 업소가 포함된 체험용 일정':'관광 조사 후보의 운영정보를 확인해 주세요.';
+  $('#catalogue-panel').open=false;
   const chosen=catalogue.meta.regions[state.region]||'취향에 맞는 권역';
   $('#result-summary').textContent=`${state.companion==='혼자'?'혼자':state.companion+' 동행'} · ${state.duration} · ${chosen}${state.date?' · '+state.date+' 출발':''}. 매일 ${state.startTime} 시작 · 전체 활동 ${state.availableHours}시간 예산입니다.`;
   $('#result-tags').replaceChildren(...[state.duration,state.companion,...state.interests,state.environment==='indoor'?'실내 중심':state.environment==='outdoor'?'야외 중심':'실내·야외',state.pace==='relaxed'?'느긋하게':state.pace==='active'?'활동적으로':'적당하게',state.transport==='car'?'자가용':'대중교통·택시',...(state.withPet?['반려견 동반']:[]),...(state.lodgingType==='camping'?['캠핑 후보']:[]),...(state.includeMock?['가상 업소 테스트']:[]),...(state.maxDiningPrice?['업소별 1인 '+Number(state.maxDiningPrice).toLocaleString('ko-KR')+'원 이하']:[]),...(state.diningQuery?[state.diningQuery]:[]),...(state.themes?.includes('nature')?['자연·힐링']:[])].map(v=>element('span',v)));
@@ -91,39 +94,27 @@ function recommend() {
     metric('지역 상권 연계 장소',stats.commercialCount+'곳',`가상 ${stats.commercialMockCount} · 조사 후보 ${stats.commercialCandidateCount} · 원문 확인 ${stats.commercialVerifiedCount}`)
   );
   $('#schedule-status').textContent=`활동 예산 ${stats.budgetMinutes}분 중 계산 가능한 합계 ${stats.plannedMinutes}분(대기 ${stats.totalWaitMinutes}분 포함). `+(stats.timingProvisional?'이동시간이 미확인인 임시 일정입니다. 이후 방문 시각은 최소 시각이며 실제 종료시간을 보장하지 않습니다.':'등록·입력한 시간 기준으로 예산 내 배치했습니다. 실제 운영·이동·예약은 확인이 필요합니다.')+` 운영시간 미확인 ${stats.unknownOpeningCount}곳.`;
-  $('#itinerary').replaceChildren(...currentTrip.days.map(day=>{
-    const card=element('article','','day-card');
-    card.append(element('h3',`DAY ${String(day.day).padStart(2,'0')} · ${day.region}`),element('p',`${day.date?day.date+' · ':''}${day.startTime}–${day.endTime} · 활동 예산 ${day.budgetMinutes}분 · 방문 ${day.stops.length}곳`,'day-meta'));
-    if(!day.stops.length)card.append(element('p','조건·운영시간·체류시간·활동 예산을 충족하는 방문지가 없습니다. 시간이나 조건을 조정해 주세요.','empty-state'));
-    day.timeline.forEach(item=>{
-      const row=element('div','','stop timeline-item'),time=element('span',item.time+(item.endTime?'–'+item.endTime:' → 미정'),'timeline-time'),content=element('div');
-      row.dataset.kind=item.kind;
-      if(item.kind==='travel'){
-        row.classList.add('transfer-row');
-        content.append(element('h4','이동 · '+item.from+' → '+item.to),element('p',item.label+(item.minutes===null?'':' · '+item.minutes+'분')),element('p','근거: '+(item.source||'구간·권역별 이동 자료 없음'),'source-note'));
-      }else if(item.kind==='wait'){
-        row.classList.add('wait-row');content.append(element('h4',item.label),element('p',item.minutes+'분 · 등록 운영시간에 맞춘 대기/휴식'));
-      }else{
-        content.append(badge(item.verification),element('h4',item.title),element('p',item.categories.join(' · ')+' / '+(item.isMock?'가상 테스트 데이터':item.verification==='verified'?'실제 장소 · 원문 확인':'관광 장소 조사 후보 · 실제 여부 미검증'),'place-meta'),element('p',item.description));
-        if(item.reasons?.length)content.append(renderReasons(item.reasons));
-        content.append(element('p',`체류 ${item.minutes}분(자료의 가정값) · 읍·면: ${item.area?(item.isMock?'가상 배치 '+item.area:item.area):'확인 필요'} · ${day.region}`,'source-note'));
-        content.append(element('p',item.openingLabel+(item.dateChecked?'':state.date?' · 휴무정보 확인 필요':' · 여행일 미지정으로 휴무 확인 필요'),'source-note'));
-        if(item.incomingTravel)content.append(element('p',`직전 구간: ${item.incomingTravel.label}${item.incomingTravel.minutes===null?'':' '+item.incomingTravel.minutes+'분'} / 근거: ${item.incomingTravel.source||'등록 자료 없음'}`,'source-note'));
-        if(item.bookingRequired)content.append(element('p','운영·예약 가능 여부를 확인한 뒤 방문 확정','source-note'));
-        if(item.isMock){row.dataset.mock='true';content.append(element('p','[가상] 실제 업소가 아니므로 지도·예약 기능을 제공하지 않습니다.','mock-notice'));}
-        else if(item.query)content.append(mapLink(item.query));
-        if(item.sourceUrl)content.append(externalLink('확인한 원문 ↗',item.sourceUrl,'source-link'));
-      }
-      if(item.provisional)content.append(element('p','이동 미확인 · 표시 시각은 확정 시각이 아닙니다.','timing-note'));
-      row.append(time,content);card.append(row);
-    });
-    if(day.missing.length)card.append(element('p','이 날짜에 배치하지 않은 관심사: '+day.missing.join(', ')+' — 조건·운영시간·시간 예산 또는 다른 날짜의 코스를 확인해 주세요.','missing-note'));
-    return card;
-  }));
+  const overview=itineraryOverview(currentTrip);
+  const range=overview.days.map(day=>`${day.day}일차 ${day.start}–${day.end||'방문 없음'}${day.provisional?' (최소 시각)':''}`).join(' / ');
+  $('#trip-overview').replaceChildren(metric('여행 기간',overview.dayCount+'일',state.duration),metric('시작·종료 예정',range,'날짜별 첫 장소 도착부터 · 숙박 제외'),metric('등록된 1인 참고금액',overview.totalPerPerson===null?'금액 확인 필요':overview.totalPerPerson.toLocaleString('ko-KR')+'원',overview.mockPriceCount?'가상 금액 포함 · 전체 여행 비용 아님':'합산 가능한 항목 기준'));
+  $('#cost-notes').textContent=overview.costNote;
+  $('#itinerary').replaceChildren(...currentTrip.days.map(day=>renderItineraryDay(day,{regions:catalogue.meta.regions,renderReasons,badge,onEdit:editConditions})));
+  $('#day-switcher').replaceChildren();
+  for(const day of [null,...currentTrip.days]){
+    const button=element('button',day?`${day.day}일차${day.date?' · '+day.date:''}`:'전체 일정','day-button');button.type='button';button.setAttribute('aria-pressed',String(day===null));button.dataset.day=day?String(day.day):'all';
+    button.addEventListener('click',()=>{for(const b of $('#day-switcher').children)b.setAttribute('aria-pressed',String(b===button));for(const card of $('#itinerary').children)card.hidden=Boolean(day&&card.id!=='itinerary-day-'+day.day);});
+    $('#day-switcher').append(button);
+  }
   $('#dynamic-notes').replaceChildren(...[...currentTrip.notes,...currentTrip.lodgingSuggestions].map(n=>element('p',n)));
   $('#event-results').replaceChildren(...currentTrip.events.map(event=>{ const card=element('article','','event-card'); card.append(element('h3',event.name),element('p',`${event.startDate} ~ ${event.endDate}`),externalLink('행사 공식 안내 ↗',event.sourceUrl)); return card; }));
   $('#copy-status').textContent=''; $('#results').scrollIntoView({behavior:'smooth',block:'start'});
 }
+function editConditions(){
+ $('#planner').scrollIntoView({behavior:'smooth',block:'start'});$('#duration-options button[aria-pressed=true]')?.focus({preventScroll:true});
+}
+$('#edit-conditions').addEventListener('click',editConditions);
+$('#refresh-trip').addEventListener('click',()=>$('#trip-form').requestSubmit());
+for(const link of document.querySelectorAll('a[href="#catalogue"]'))link.addEventListener('click',()=>{$('#catalogue-panel').open=true;});
 $('#dining-query').addEventListener('input',()=>{
   const query=$('#dining-query').value.trim();
   const exact=dining.find(p=>p.name.replace('[가상] ','').replace(/\s+/g,'')===query.replace(/\s+/g,''));
@@ -158,15 +149,16 @@ for(const button of document.querySelectorAll('[data-interest]')) button.addEven
 for(const id of ['catalogue-search','catalogue-category','catalogue-region','catalogue-budget']) document.getElementById(id).addEventListener('input',renderCatalogue);
 $('#copy-trip').addEventListener('click',async()=>{
   if(!currentTrip)return;
-  const stats=currentTrip.stats;
+  const stats=currentTrip.stats,overview=itineraryOverview(currentTrip);
   const text=['의동이 픽 · '+currentTrip.options.duration,
     `방문 ${stats.totalVisitCount}곳 / 체류 ${stats.totalStayMinutes}분 / 이동 ${stats.totalTravelMinutes===null?'확인 필요 ('+stats.unknownTravelLegs+'구간 미확인)':stats.totalTravelMinutes+'분'} / 대기 ${stats.totalWaitMinutes}분`,
     `지역 상권 연계 장소 ${stats.commercialCount}곳 (가상 ${stats.commercialMockCount}, 조사 후보 ${stats.commercialCandidateCount}, 원문 확인 ${stats.commercialVerifiedCount})`,
+    `등록된 1인 참고금액: ${overview.totalPerPerson===null?'미확인':overview.totalPerPerson.toLocaleString('ko-KR')+'원'} / ${overview.costNote}`,
     ...currentTrip.days.flatMap(day=>['\nDAY '+day.day+' · '+day.region+(day.date?' · '+day.date:''),...day.timeline.map(s=>{
       const time=s.time+(s.endTime?'–'+s.endTime:' → 미정');
       if(s.kind==='travel')return `${time} 이동 ${s.from} → ${s.to} / ${s.label} / 근거 ${s.source||'자료 없음'}`;
       if(s.kind==='wait')return `${time} ${s.label} ${s.minutes}분`;
-      return `${time} ${s.title} / ${s.categories.join('·')} / 체류 ${s.minutes}분\n읍·면 ${s.area||'확인 필요'} / ${s.openingLabel} / ${s.provisional?'이동 미확인 최소 시각':'등록·입력값 기준'}\n${s.reason}\n${s.isMock?'[가상] 실제 방문·예약 불가':s.sourceUrl||'관광 장소 조사 후보'}`;
+      return `${time} ${s.title} / ${s.categories.join('·')} / 체류 ${s.minutes}분\n읍·면 ${s.area||'확인 필요'} / ${s.openingLabel} / ${s.provisional?'이동 미확인 최소 시각':'등록·입력값 기준'}\n${s.reason}\n${pricePresentation(s).text}\n${s.isMock?'[가상] 실제 방문·예약 불가':s.sourceUrl||'관광 장소 조사 후보'}`;
     })]),'\n확인 사항',...currentTrip.notes,...currentTrip.lodgingSuggestions].join('\n');
   try{await navigator.clipboard.writeText(text);$('#copy-status').textContent='확인 사항과 함께 일정을 복사했어요.';}
   catch{$('#copy-status').textContent='아래 내용을 직접 복사해 주세요.';const area=element('textarea');area.value=text;area.readOnly=true;area.setAttribute('aria-label','복사할 여행 일정');$('#copy-status').append(area);area.select();}

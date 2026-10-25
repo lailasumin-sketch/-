@@ -1,3 +1,4 @@
+import { mealWindows, mealPeriodAt } from './meal-times.js';
 import { recommendationReasons } from './recommendation-reasons.js';
 // Pure, bounded itinerary search. All numbers originate in data or explicit user inputs.
 export const isTime = value => typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
@@ -42,7 +43,7 @@ function visitSlots(place, arrival, limit, date, preferLunch) {
     return {start,end,openingKnown:hours.known};
   }
   const candidates=[fit(arrival)];
-  if (preferLunch && arrival <= 840 && limit >= 690) candidates.push(fit(Math.max(arrival,690)));
+  if(preferLunch)for(const window of mealWindows)if(arrival<=window.end&&limit>=window.start)candidates.push(fit(Math.max(arrival,window.start)));
   return candidates.filter((slot,index,array)=>slot && array.findIndex(p=>p?.start === slot.start) === index);
 }
 const compare = (a,b) => {
@@ -62,8 +63,11 @@ export function planDay({candidates, start, end, date, interests, options, trave
       for(const place of candidates) {
         if(usedIds.has(place.id) || state.ids.has(place.id) || usedGroups.has(place.group) || state.groups.has(place.group)) continue;
         if(place.kind === 'place' && state.visits.filter(p=>p.kind==='place').length >= touristCap) continue;
-        // One meal and one cafe per day; other days can select different businesses.
-        if(['맛집','카페'].includes(place.category) && state.visits.some(p=>p.category===place.category)) continue;
+        // At most one cafe, and separate lunch/dinner businesses when the time window permits.
+        if(place.category==='카페'&&state.visits.some(p=>p.category==='카페'))continue;
+        const meals=state.visits.filter(p=>p.category==='맛집');
+        const maxMeals=start<=840&&end>=1020?2:1;
+        if(place.category==='맛집'&&meals.length>=maxMeals)continue;
         const matches=place.categories.filter(c=>wanted.has(c));
         if(!matches.length) continue;
         const last=state.visits.at(-1);
@@ -71,11 +75,13 @@ export function planDay({candidates, start, end, date, interests, options, trave
         const arrival=state.cursor+(travel?.minutes ?? 0);
         const slots=visitSlots(place,arrival,end,date,place.category==='맛집');
         for(const slot of slots) {
+          const mealPeriod=place.category==='맛집'?mealPeriodAt(slot.start):null;
+          if(place.category==='맛집'&&meals.length&&(!mealPeriod||meals.some(p=>!p.mealPeriod||p.mealPeriod===mealPeriod)))continue;
           const timeline=[...state.timeline];
           const provisional=state.unknownTravel>0 || travel?.basis==='unknown';
           if(travel) timeline.push({kind:'travel',from:last.title,to:place.title,time:toClock(state.cursor),endTime:travel.minutes===null?null:toClock(arrival),minutes:travel.minutes,basis:travel.basis,source:travel.source,label:travel.label,provisional});
           if(slot.start>arrival) timeline.push({kind:'wait',time:toClock(arrival),endTime:toClock(slot.start),minutes:slot.start-arrival,label:'운영시간에 맞춘 대기·휴식',provisional});
-          const stop={...place,time:toClock(slot.start),endTime:toClock(slot.end),openingKnown:slot.openingKnown,openingLabel:slot.openingKnown ? (place.isMock?'가상 운영시간 충족':'등록 운영시간 충족') : '운영시간 확인 필요',dateChecked:Boolean(date)&&Array.isArray(place.closedWeekdays??place.openingHours?.closedWeekdays),provisional,incomingTravel:travel};
+          const stop={...place,mealPeriod,time:toClock(slot.start),endTime:toClock(slot.end),openingKnown:slot.openingKnown,openingLabel:slot.openingKnown ? (place.isMock?'가상 운영시간 충족':'등록 운영시간 충족') : '운영시간 확인 필요',dateChecked:Boolean(date)&&Array.isArray(place.closedWeekdays??place.openingHours?.closedWeekdays),provisional,incomingTravel:travel};
           stop.reasons=recommendationReasons(place,{options,interests:[...wanted],start:slot.start,end:slot.end,dayStart:start,dayEnd:end,provisional});
           stop.reason=stop.reasons.map(reason=>reason.text).join(' · ');
           timeline.push(stop);
@@ -84,9 +90,10 @@ export function planDay({candidates, start, end, date, interests, options, trave
           const nextState={visits:[...state.visits,stop],timeline,cursor:slot.end,ids,groups,covered,
             matchPoints:state.matchPoints+matches.length+(place.themeMatch?1:0),companionPoints:state.companionPoints+Number(place.audiences.includes(options.companion)),
             hoursKnown:state.hoursKnown+Number(slot.openingKnown),unknownTravel:state.unknownTravel+Number(travel?.basis==='unknown'),travelMinutes:state.travelMinutes+(travel?.minutes??0),waitMinutes:state.waitMinutes+slot.start-arrival,
-            mealScore:state.mealScore+Number(place.category==='맛집'&&slot.start>=690&&slot.start<=840)*2+Number(Boolean(place.category==='카페'&&last&&last.kind==='place')),signature:[...state.visits.map(p=>p.id),place.id,toClock(slot.start)].join('|')};
+            mealScore:state.mealScore+Number(Boolean(mealPeriod))*2+Number(Boolean(place.category==='카페'&&last&&last.kind==='place')),signature:[...state.visits.map(p=>p.id),place.id,toClock(slot.start)].join('|')};
           // Interest coverage, matches, companion, supported operating hours, then travel and variety.
-          nextState.rank=[covered.size+[...covered].filter(c=>!previousCoverage.has(c)).length,nextState.matchPoints,nextState.companionPoints,nextState.hoursKnown,-nextState.unknownTravel,-nextState.travelMinutes,nextState.mealScore,-nextState.waitMinutes];
+          const mealCoverage=maxMeals===2?new Set(nextState.visits.filter(p=>p.category==='맛집'&&p.mealPeriod).map(p=>p.mealPeriod)).size/10:0;
+          nextState.rank=[covered.size+[...covered].filter(c=>!previousCoverage.has(c)).length+mealCoverage,nextState.matchPoints,nextState.companionPoints,nextState.hoursKnown,-nextState.unknownTravel,-nextState.travelMinutes,nextState.mealScore,-nextState.waitMinutes];
           next.push(nextState);
           if(compare(nextState,best)<0) best=nextState;
         }

@@ -14,10 +14,12 @@ with sync_playwright() as p:
   page.goto(url,wait_until='load')
   page.wait_for_function("document.querySelectorAll('.place-card').length===65")
   assert page.locator('.usb-chart').count()==3
+  page.locator('#catalogue-panel').evaluate('(el)=>el.open=true')
   assert '65곳' in page.locator('.usb-chart').first.inner_text()
   if offline:page.context.set_offline(True)
   assert page.locator('input#start-time').input_value()=='09:30'
   assert page.evaluate("getComputedStyle(document.body).getPropertyValue('--bg').trim()")=='#f9f7f2'
+  page.locator('#catalogue-panel').evaluate('(el)=>el.open=true')
   page.locator('#catalogue-search').fill('카페')
   assert page.locator('.mock-card').count()==12;assert '12곳' in page.locator('.usb-chart').first.inner_text()
   page.locator('#catalogue-budget').select_option('10000')
@@ -27,11 +29,14 @@ with sync_playwright() as p:
   page.locator('#trip-prompt').fill('가족과 당일치기 맛집 카페 볼거리, 오전 9시30분부터 총 6시간')
   page.locator('#travel-allowance').fill('15');page.locator('#prompt-submit').click()
   assert page.locator('.day-card').count()==1
-  assert page.locator('.stat-card').count()==4
+  assert page.locator('#trip-stats .stat-card').count()==4
   assert page.locator('.recommendation-reasons').count()>=3
   assert page.locator('.reason-check').count()>0
   assert '가족 여행 조건과 일치' in page.locator('#itinerary').inner_text()
   assert page.locator('#itinerary [data-mock=true]').count()==2
+  assert page.locator('#trip-overview .stat-card').count()==3
+  assert not page.locator('#catalogue-panel').evaluate('(el)=>el.open')
+  assert page.locator('.map-button').first.is_disabled()
   times=page.locator('.timeline-time').all_text_contents();end=0
   for text in times:
    a,b=re.findall(r'\d\d:\d\d',text)
@@ -64,7 +69,8 @@ with sync_playwright() as p:
  # Actual screenshots of the packaged app, not invented UI.
  page.evaluate('scrollTo(0,0)');page.screenshot(path=str(root/'발표자료'/'화면_메인.png'),full_page=False)
  page.locator('#results').evaluate('(el)=>el.scrollIntoView({block:"start",behavior:"instant"})');page.wait_for_timeout(200);page.screenshot(path=str(root/'발표자료'/'화면_일정.png'),full_page=False)
- page.locator('#catalogue-search').fill('카페');page.locator('#usb-dashboard').screenshot(path=str(root/'발표자료'/'화면_차트.png'))
+ page.locator('.itinerary-card').first.locator('..').screenshot(path=str(root/'발표자료'/'화면_카드.png'))
+ page.locator('#catalogue-panel').evaluate('(el)=>el.open=true');page.locator('#catalogue-search').fill('카페');page.locator('#usb-dashboard').screenshot(path=str(root/'발표자료'/'화면_차트.png'))
  # New path containing Korean text, spaces and !; no absolute path assumptions.
  base=Path(tempfile.mkdtemp(prefix='usb-relocation-'))/'다른 드라이브 가정 ! 심사용';base.mkdir()
  for name in ['index.html','assets','server']:
