@@ -1,0 +1,46 @@
+{
+  "windows_bat_double_click": "미검증: Linux, Windows/Wine 없음",
+  "windows_no_node_installed": "미검증: Node.exe 포함·체크섬·x64/ARM64 PE 형식만 검증",
+  "windows_drive_letter_change": "미검증: 실제 Windows 드라이브 문자 변경 불가",
+  "tests": [
+    {
+      "name": "동일 패키지 HTML: 로컬 제공 후 인터넷 차단, 65개 자료·검색·필터·차트·추천·체크 이유·복사/대체·모바일",
+      "status": "passed"
+    },
+    {
+      "name": "HTML 상대경로 정적 검사: 경로 이동 후 필요한 스크립트·CSS·이미지·글꼴 존재",
+      "status": "passed"
+    },
+    {
+      "name": "서버 방식: 다른 경로에서 포트 자동 할당·헬스체크·로컬 응답·소스 비공개·웹 기능 (Linux Node로 검증)",
+      "status": "passed"
+    },
+    {
+      "name": "서버 시작 실패: 필수 앱 파일 누락 시 오류 문구와 실패 종료 코드",
+      "status": "passed"
+    },
+    {
+      "name": "BAT 정적 검사: CRLF·상대경로·x64/ARM64 분기·npm 명령 없음 / Node 실행 파일 체크섬",
+      "status": "passed"
+    },
+    {
+      "name": "CSV 2개: 한글 UTF-8 BOM·열 수·원본 30/35행·대체문자 없음",
+      "status": "passed"
+    }
+  ],
+  "file_direct_execution": "미검증: 관리 브라우저의 URLBlocklist가 file://를 차단. 정책 변경·우회하지 않음.",
+  "file_relocation_execution": "미검증: file:// 관리 정책 차단. 상대경로 파일 존재 정적 검사와 서버 경로 이동은 별도 검증.",
+  "source_tests": {
+    "executed": 53,
+    "passed": 53,
+    "failed": 0,
+    "skipped": 0,
+    "command": "npm run build"
+  },
+  "presentation": {
+    "pptx_slides": 5,
+    "pdf_pages": 5,
+    "speaker_notes": true,
+    "visual_check": "PDF rendered and all slides reviewed"
+  }
+}
