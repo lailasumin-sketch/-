@@ -79,7 +79,6 @@ function normalizePlace(p, selected, options, isMock) {
   const themeMatch=Boolean(options.themes?.includes('nature')&&!p.indoor&&p.categories.includes('볼거리')&&/산|숲|계곡|공원|마을|강|낙단보/.test(p.name));
   return {...p,title:p.name,category,kind:isMock?'mock-dining':'place',group:p.group||p.id,isMock,area:p.area||null,
     description:isMock?`가상 테스트 업소 · ${p.menu} · 1인 예산 ${p.price.toLocaleString('ko-KR')}원(가정). ${p.atmosphere}. 실제 업소·주소·예약 정보가 아닙니다.`:p.description,
-    reason:[p.categories.filter(c=>selected.includes(c)).join('·')+' 관심사 일치',p.audiences.includes(options.companion)?options.companion+' 동행 적합':'',themeMatch?'이름·실내외 분류에 따른 자연·힐링 취향':''].filter(Boolean).join(' · '),
     themeMatch,query:isMock?null:'의성 '+p.name,sourceUrl:p.sourceUrl||null};
 }
 export function buildTrip(options, catalogue, events = [], dining = [], travelTable = {routes:[],regionRoutes:[]}) {

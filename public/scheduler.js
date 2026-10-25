@@ -1,3 +1,4 @@
+import { recommendationReasons } from './recommendation-reasons.js';
 // Pure, bounded itinerary search. All numbers originate in data or explicit user inputs.
 export const isTime = value => typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
 export const toMinutes = value => { const [h,m]=value.split(':').map(Number); return h*60+m; };
@@ -75,6 +76,8 @@ export function planDay({candidates, start, end, date, interests, options, trave
           if(travel) timeline.push({kind:'travel',from:last.title,to:place.title,time:toClock(state.cursor),endTime:travel.minutes===null?null:toClock(arrival),minutes:travel.minutes,basis:travel.basis,source:travel.source,label:travel.label,provisional});
           if(slot.start>arrival) timeline.push({kind:'wait',time:toClock(arrival),endTime:toClock(slot.start),minutes:slot.start-arrival,label:'운영시간에 맞춘 대기·휴식',provisional});
           const stop={...place,time:toClock(slot.start),endTime:toClock(slot.end),openingKnown:slot.openingKnown,openingLabel:slot.openingKnown ? (place.isMock?'가상 운영시간 충족':'등록 운영시간 충족') : '운영시간 확인 필요',dateChecked:Boolean(date)&&Array.isArray(place.closedWeekdays??place.openingHours?.closedWeekdays),provisional,incomingTravel:travel};
+          stop.reasons=recommendationReasons(place,{options,interests:[...wanted],start:slot.start,end:slot.end,dayStart:start,dayEnd:end,provisional});
+          stop.reason=stop.reasons.map(reason=>reason.text).join(' · ');
           timeline.push(stop);
           const covered=new Set([...state.covered,...matches]);
           const ids=new Set([...state.ids,place.id]),groups=new Set([...state.groups,place.group]);

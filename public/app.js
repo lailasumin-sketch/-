@@ -13,6 +13,18 @@ function externalLink(text, href, className) {
 }
 function mapLink(query) { return externalLink('지도에서 확인 ↗',`https://map.naver.com/p/search/${encodeURIComponent(query)}`); }
 function badge(status, hold = false) { return element('span',hold ? '방문 후보에서 보류' : status === 'fictional' ? '[가상] 테스트 전용' : status === 'verified' ? '원문 확인' : status === 'search' ? '업체 직접 찾기' : '원문·운영 확인 전', 'status-badge'+(status==='verified'?' verified':'')); }
+function renderReasons(reasons) {
+  const block=element('div','','recommendation-reasons');
+  block.append(element('p','추천 이유','reasons-title'));
+  const list=element('ul');
+  list.setAttribute('aria-label','추천 이유');
+  for(const reason of reasons){
+    const item=element('li'),check=element('span','✓','reason-check');
+    check.setAttribute('aria-hidden','true');
+    item.append(check,element('span',reason.text));list.append(item);
+  }
+  block.append(list);return block;
+}
 function renderChoices() {
   for (const [id, values, key] of [['duration-options',durations,'duration'], ['companion-options',companions,'companion'], ['interest-options',interests,'interests']]) {
     const container=document.getElementById(id); container.replaceChildren();
@@ -92,7 +104,8 @@ function recommend() {
       }else if(item.kind==='wait'){
         row.classList.add('wait-row');content.append(element('h4',item.label),element('p',item.minutes+'분 · 등록 운영시간에 맞춘 대기/휴식'));
       }else{
-        content.append(badge(item.verification),element('h4',item.title),element('p',item.categories.join(' · ')+' / '+(item.isMock?'가상 테스트 데이터':item.verification==='verified'?'실제 장소 · 원문 확인':'관광 장소 조사 후보 · 실제 여부 미검증'),'place-meta'),element('p',item.description),element('p',item.reason,'reason'));
+        content.append(badge(item.verification),element('h4',item.title),element('p',item.categories.join(' · ')+' / '+(item.isMock?'가상 테스트 데이터':item.verification==='verified'?'실제 장소 · 원문 확인':'관광 장소 조사 후보 · 실제 여부 미검증'),'place-meta'),element('p',item.description));
+        if(item.reasons?.length)content.append(renderReasons(item.reasons));
         content.append(element('p',`체류 ${item.minutes}분(자료의 가정값) · 읍·면: ${item.area?(item.isMock?'가상 배치 '+item.area:item.area):'확인 필요'} · ${day.region}`,'source-note'));
         content.append(element('p',item.openingLabel+(item.dateChecked?'':state.date?' · 휴무정보 확인 필요':' · 여행일 미지정으로 휴무 확인 필요'),'source-note'));
         if(item.incomingTravel)content.append(element('p',`직전 구간: ${item.incomingTravel.label}${item.incomingTravel.minutes===null?'':' '+item.incomingTravel.minutes+'분'} / 근거: ${item.incomingTravel.source||'등록 자료 없음'}`,'source-note'));
